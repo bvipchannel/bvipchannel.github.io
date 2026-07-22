@@ -333,8 +333,8 @@
 
             if (userId && userId.trim() !== "") {
                 document.getElementById('content').style.display = 'block';
-                // Плеер подгружается через открытое зеркало (без VPN для зрителей)
-                document.getElementById('videoPlayer').src = `https://vid.priv.au/embed/${videoId}?autoplay=0&controls=0`;
+                // Загрузка через стабильный плеер Piped без VPN
+                document.getElementById('videoPlayer').src = `https://piped.video/embed/${videoId}?autoplay=0`;
                 
                 // Запуск периодического опроса сервера для синхронизации чата с Telegram
                 setInterval(fetchMessages, 3000);
@@ -345,7 +345,7 @@
 
         function startStream() {
             // Запуск видео со звуком по клику на золотую кнопку
-            document.getElementById('videoPlayer').src = `https://vid.priv.au/embed/${videoId}?autoplay=1&controls=0`;
+            document.getElementById('videoPlayer').src = `https://piped.video/embed/${videoId}?autoplay=1`;
             document.getElementById('playOverlay').style.display = 'none';
             document.getElementById('videoShield').style.display = 'block';
             document.getElementById('fsBtn').style.display = 'block';
