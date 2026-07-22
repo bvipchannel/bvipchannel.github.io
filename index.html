@@ -38,7 +38,6 @@
             text-align: center;
         }
 
-        /* Заголовок в элитном стиле */
         h1 {
             font-size: 24px;
             font-weight: 700;
@@ -56,7 +55,6 @@
             letter-spacing: 0.3px;
         }
 
-        /* Контейнер плеера с эффектом объема */
         .video-container {
             position: relative;
             width: 100%;
@@ -87,7 +85,6 @@
             display: none;
         }
 
-        /* Премиальная кнопка Play */
         .play-overlay {
             position: absolute;
             top: 0;
@@ -149,7 +146,6 @@
             border-color: rgba(255, 255, 255, 0.2);
         }
 
-        /* Чат в стиле Glassmorphism */
         .chat-section {
             margin-top: 24px;
             width: 100%;
@@ -187,7 +183,6 @@
             margin-bottom: 12px;
         }
 
-        /* Кастомный элегантный скроллбар чата */
         .chat-box::-webkit-scrollbar {
             width: 6px;
         }
@@ -257,7 +252,6 @@
             transform: scale(0.98);
         }
 
-        /* Экран ошибки */
         .error-screen {
             display: flex;
             flex-direction: column;
@@ -319,7 +313,6 @@
     </div>
 
     <script>
-        // ID твоего тестового стрима с YouTube
         const videoId = "6gr8zhzHhOE";
 
         window.onload = function() {
@@ -333,10 +326,9 @@
 
             if (userId && userId.trim() !== "") {
                 document.getElementById('content').style.display = 'block';
-                // Загрузка через стабильный плеер Piped без VPN
-                document.getElementById('videoPlayer').src = `https://piped.video/embed/${videoId}?autoplay=0`;
+                // Добавлен параметр player=true, чтобы убрать лишний интерфейс и загружать только плеер
+                document.getElementById('videoPlayer').src = `https://piped.video/embed/${videoId}?player=true&autoplay=0`;
                 
-                // Запуск периодического опроса сервера для синхронизации чата с Telegram
                 setInterval(fetchMessages, 3000);
             } else {
                 document.getElementById('error').style.display = 'flex';
@@ -344,8 +336,7 @@
         };
 
         function startStream() {
-            // Запуск видео со звуком по клику на золотую кнопку
-            document.getElementById('videoPlayer').src = `https://piped.video/embed/${videoId}?autoplay=1`;
+            document.getElementById('videoPlayer').src = `https://piped.video/embed/${videoId}?player=true&autoplay=1`;
             document.getElementById('playOverlay').style.display = 'none';
             document.getElementById('videoShield').style.display = 'block';
             document.getElementById('fsBtn').style.display = 'block';
@@ -368,7 +359,6 @@
             }
         }
 
-        // Отправка сообщения напрямую на сервер Render
         async function sendMessage() {
             const usernameInput = document.getElementById('usernameInput');
             const messageInput = document.getElementById('messageInput');
@@ -387,13 +377,12 @@
                     body: JSON.stringify({ name: name, text: text })
                 });
                 messageInput.value = '';
-                fetchMessages(); // Сразу обновляем чат после отправки
+                fetchMessages();
             } catch (error) {
                 console.error("Ошибка отправки сообщения:", error);
             }
         }
 
-        // Получение актуальных сообщений с сервера Render
         async function fetchMessages() {
             try {
                 let response = await fetch('https://stream-sxnh.onrender.com/api/messages');
@@ -405,7 +394,6 @@
                     htmlContent += `<div class="chat-message"><span style="color: var(--gold);">${escapeHtml(msg.name)}:</span> ${escapeHtml(msg.text)}</div>`;
                 });
                 
-                // Обновляем HTML чата только если он изменился, сохраняя позицию прокрутки
                 if (chatMessages.innerHTML !== htmlContent) {
                     let isScrolledToBottom = chatMessages.scrollHeight - chatMessages.clientHeight <= chatMessages.scrollTop + 20;
                     chatMessages.innerHTML = htmlContent;
