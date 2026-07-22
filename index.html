@@ -319,7 +319,8 @@
     </div>
 
     <script>
-        const videoId = "Pfd1Wpy7lkk";
+        // ID твоего тестового стрима с YouTube
+        const videoId = "6gr8zhzHhOE";
 
         window.onload = function() {
             const savedName = localStorage.getItem('chat_username');
@@ -332,7 +333,8 @@
 
             if (userId && userId.trim() !== "") {
                 document.getElementById('content').style.display = 'block';
-                document.getElementById('videoPlayer').src = `https://www.youtube.com/embed/${videoId}?enablejsapi=1&autoplay=0&controls=0&rel=0&modestbranding=1`;
+                // Плеер подгружается через открытое зеркало (без VPN для зрителей)
+                document.getElementById('videoPlayer').src = `https://vid.priv.au/embed/${videoId}?autoplay=0&controls=0`;
                 
                 // Запуск периодического опроса сервера для синхронизации чата с Telegram
                 setInterval(fetchMessages, 3000);
@@ -342,7 +344,8 @@
         };
 
         function startStream() {
-            document.getElementById('videoPlayer').src = `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&rel=0&modestbranding=1`;
+            // Запуск видео со звуком по клику на золотую кнопку
+            document.getElementById('videoPlayer').src = `https://vid.priv.au/embed/${videoId}?autoplay=1&controls=0`;
             document.getElementById('playOverlay').style.display = 'none';
             document.getElementById('videoShield').style.display = 'block';
             document.getElementById('fsBtn').style.display = 'block';
@@ -390,7 +393,6 @@
             }
         }
 
-        
         // Получение актуальных сообщений с сервера Render
         async function fetchMessages() {
             try {
