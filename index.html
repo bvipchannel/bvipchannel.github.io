@@ -1,431 +1,520 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIP Трансляция</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #070707;
-            --card-bg: rgba(20, 20, 20, 0.75);
-            --border-color: rgba(255, 255, 255, 0.08);
-            --gold: #d4af37;
-            --gold-hover: #f1c40f;
-            --text-main: #f5f5f7;
-            --text-muted: #86868b;
-        }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIP Трансляция | GRAFBALAS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050505;
+            --card-bg: rgba(15, 15, 15, 0.6);
+            --border-color: rgba(255, 255, 255, 0.06);
+            --gold: #d4af37;
+            --gold-hover: #f1c40f;
+            --gold-gradient: linear-gradient(135deg, #d4af37 0%, #aa8c2c 100%);
+            --text-main: #f5f5f7;
+            --text-muted: #86868b;
+        }
 
-        body {
-            margin: 0;
-            background-color: var(--bg-color);
-            background-image:
-                radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 100% 100%, rgba(25, 25, 25, 0.8) 0%, transparent 50%);
-            color: var(--text-main);
-            font-family: 'Montserrat', sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-            box-sizing: border-box;
-        }
+        body {
+            margin: 0;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
+            color: var(--text-main);
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 30px 20px;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
 
-        .container {
-            width: 100%;
-            max-width: 950px;
-            text-align: center;
-        }
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
 
-        /* Заголовок в элитном стиле */
-        h1 {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 6px;
-            letter-spacing: 0.5px;
-            background: linear-gradient(135deg, #ffffff 30%, #a1a1a6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-        p {
-            color: var(--text-muted);
-            font-size: 13px;
-            margin-bottom: 20px;
-            letter-spacing: 0.3px;
-        }
+        /* Элитный Заголовок */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-        /* Контейнер плеера с эффектом объема */
-        .video-container {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%;
-            background: #000;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 0 1px var(--border-color);
-        }
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #ffffff 20%, #86868b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+        }
 
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: 0;
-            pointer-events: none;
-        }
+        .subtitle {
+            color: var(--gold);
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
 
-        .video-shield {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 40;
-            display: none;
-        }
+        /* Контейнер плеера */
+        .video-wrapper {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 10px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            margin-bottom: 25px;
+        }
 
-        /* Премиальная кнопка Play */
-        .play-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(7, 7, 7, 0.85);
-            backdrop-filter: blur(8px);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 50;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+        }
 
-        .play-btn {
-            background: linear-gradient(135deg, #d4af37 0%, #aa8c2c 100%);
-            color: #000;
-            border: none;
-            padding: 16px 36px;
-            font-size: 15px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            border-radius: 50px;
-            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            /* Отключаем события мыши для самого iframe */
+            pointer-events: none; 
+        }
 
-        .play-btn:hover {
-            transform: scale(1.03);
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.5);
-        }
+        /* Щит, полностью перекрывающий клики на YouTube */
+        .video-shield {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            background: transparent;
+        }
 
-        .player-controls {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 12px;
-        }
+        /* Оверлей запуска */
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 5, 5, 0.85);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            transition: opacity 0.5s ease;
+        }
 
-        .fs-btn {
-            background-color: rgba(255, 255, 255, 0.05);
-            color: var(--text-main);
-            border: 1px solid var(--border-color);
-            padding: 10px 16px;
-            font-size: 13px;
-            font-weight: 500;
-            border-radius: 10px;
-            cursor: pointer;
-            display: none;
-            backdrop-filter: blur(5px);
-            transition: background 0.2s, border-color 0.2s;
-        }
+        .play-btn {
+            background: var(--gold-gradient);
+            color: #000;
+            border: none;
+            padding: 18px 45px;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.25);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-family: 'Montserrat', sans-serif;
+        }
 
-        .fs-btn:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
+        .play-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.4);
+        }
 
-        /* Чат в стиле Glassmorphism */
-        .chat-section {
-            margin-top: 24px;
-            width: 100%;
-            background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 18px;
-            box-sizing: border-box;
-            text-align: left;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-        }
+        /* Кастомные контролы */
+        .custom-controls {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 15px;
+            padding: 0 5px;
+        }
 
-        .chat-section h3 {
-            margin-top: 0;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-main);
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
-            margin-bottom: 12px;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
+        .action-btn {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 12px;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            transition: all 0.2s ease;
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-        .chat-box {
-            height: 150px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 10px;
-            padding: 12px;
-            overflow-y: auto;
-            font-size: 13px;
-            color: #d1d1d6;
-            border: 1px solid var(--border-color);
-            margin-bottom: 12px;
-        }
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
 
-        /* Кастомный элегантный скроллбар чата */
-        .chat-box::-webkit-scrollbar {
-            width: 6px;
-        }
-        .chat-box::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 3px;
-        }
+        /* Чат */
+        .chat-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
 
-        .chat-message {
-            margin-bottom: 8px;
-            line-height: 1.4;
-            word-break: break-word;
-        }
+        .chat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
 
-        .chat-message span {
-            color: var(--gold);
-            font-weight: 600;
-        }
+        .chat-header h3 {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
 
-        .chat-form {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+        .online-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
 
-        .chat-row {
-            display: flex;
-            gap: 10px;
-        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            background-color: #32d74b;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #32d74b;
+        }
 
-        .chat-input {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--border-color);
-            padding: 12px 14px;
-            border-radius: 10px;
-            color: #fff;
-            font-size: 13px;
-            outline: none;
-            box-sizing: border-box;
-            font-family: 'Montserrat', sans-serif;
-            transition: border-color 0.2s;
-        }
+        .chat-box {
+            height: 250px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            overflow-y: auto;
+            font-size: 14px;
+            color: #e5e5ea;
+            border: 1px solid inset var(--border-color);
+            margin-bottom: 20px;
+            scroll-behavior: smooth;
+        }
 
-        .chat-input:focus {
-            border-color: var(--gold);
-        }
+        .chat-box::-webkit-scrollbar { width: 4px; }
+        .chat-box::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
 
-        .chat-send {
-            background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%);
-            color: #000;
-            border: none;
-            padding: 12px;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            font-size: 13px;
-            width: 100%;
-            font-family: 'Montserrat', sans-serif;
-            transition: opacity 0.2s, transform 0.1s;
-        }
+        .chat-message {
+            margin-bottom: 12px;
+            line-height: 1.5;
+            word-break: break-word;
+            animation: fadeIn 0.3s ease-out;
+        }
 
-        .chat-send:hover {
-            opacity: 0.9;
-        }
+        .chat-message span.author {
+            color: var(--gold);
+            font-weight: 600;
+            margin-right: 5px;
+        }
 
-        .chat-send:active {
-            transform: scale(0.98);
-        }
+        .chat-form {
+            display: flex;
+            gap: 12px;
+        }
 
-        /* Экран ошибки */
-        .error-screen {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            text-align: center;
-            color: #ff453a;
-            font-family: 'Montserrat', sans-serif;
-        }
-        .error-screen h2 {
-            font-size: 20px;
-            margin-bottom: 8px;
-        }
-        .error-screen p {
-            color: var(--text-muted);
-            font-size: 13px;
-            line-height: 1.5;
-        }
-    </style>
+        .chat-input {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border-color);
+            padding: 14px 18px;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input:focus {
+            border-color: var(--gold);
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .btn-send {
+            background: var(--text-main);
+            color: #000;
+            border: none;
+            padding: 0 25px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.2s ease;
+        }
+
+        .btn-send:hover {
+            background: #fff;
+            transform: scale(1.02);
+        }
+
+        /* Экран ошибки */
+        .error-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+        
+        .error-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .error-screen h2 {
+            font-size: 24px;
+            margin-bottom: 12px;
+            color: #ff453a;
+            letter-spacing: 1px;
+        }
+
+        .error-screen p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 400px;
+        }
+    </style>
 </head>
 <body>
 
-    <div id="content" class="container" style="display: none;">
-        <h1>💎 VIP GRAFBALAS STREAM</h1>
-        <p>Эксклюзивный доступ авторизован</p>
-        
-        <div class="video-container" id="videoBox">
-            <iframe id="videoPlayer" src="" allow="autoplay; encrypted-media; fullscreen"></iframe>
-            <div class="video-shield" id="videoShield"></div>
-            <div class="play-overlay" id="playOverlay" onclick="startStream()">
-                <button class="play-btn">СМОТРЕТЬ ТРАНСЛЯЦИЮ</button>
-                <p style="margin-top: 14px; color: var(--text-muted); font-size: 12px;">Нажмите для активации видео и звука</p>
-            </div>
-        </div>
+    <!-- Успешная авторизация -->
+    <div id="content" class="container" style="display: none;">
+        <div class="header">
+            <h1>VIP GRAFBALAS</h1>
+            <div class="subtitle">Закрытая трансляция</div>
+        </div>
+        
+        <div class="video-wrapper" id="videoWrapper">
+            <div class="video-container" id="videoBox">
+                <!-- Сюда API YouTube вставит плеер -->
+                <div id="ytplayer"></div>
+                
+                <!-- Щит от кликов -->
+                <div class="video-shield"></div>
+                
+                <!-- Оверлей до запуска -->
+                <div class="play-overlay" id="playOverlay">
+                    <button class="play-btn" onclick="startStream()">Подключиться к эфиру</button>
+                    <p style="margin-top: 20px; color: rgba(255,255,255,0.5); font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Нажмите для синхронизации потока</p>
+                </div>
+            </div>
 
-        <div class="player-controls">
-            <button class="fs-btn" id="fsBtn" onclick="toggleFullScreen()">⛶ На весь экран</button>
-        </div>
+            <div class="custom-controls">
+                <button class="action-btn" id="fsBtn" onclick="toggleFullScreen()" style="display: none;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+                    На весь экран
+                </button>
+            </div>
+        </div>
 
-        <div class="chat-section">
-            <h3>💬 Закрытый чат</h3>
-            <div class="chat-box" id="chatMessages">
-                <div class="chat-message"><span style="color: var(--gold);">[Система]:</span> Добро пожаловать на просмотр! Присаживайтесь поудобнее, мы начинаем!</div>
-            </div>
-            <div class="chat-form">
-                <div class="chat-row">
-                    <input type="text" id="usernameInput" class="chat-input" placeholder="Ваше имя" style="width: 35%;" />
-                    <input type="text" id="messageInput" class="chat-input" placeholder="Ваше сообщение..." style="width: 65%;" onkeydown="checkEnter(event)" />
-                </div>
-                <button class="chat-send" onclick="sendMessage()">Отправить</button>
-            </div>
-        </div>
-    </div>
+        <div class="chat-section">
+            <div class="chat-header">
+                <h3>💬 Live Чат</h3>
+                <div class="online-indicator">
+                    <div class="dot"></div>
+                    <span>Синхронизировано с Telegram</span>
+                </div>
+            </div>
+            
+            <div class="chat-box" id="chatMessages">
+                <!-- Сообщения -->
+            </div>
+            
+            <div class="chat-form">
+                <input type="text" id="usernameInput" class="chat-input" placeholder="Ваше имя" style="width: 25%;" />
+                <input type="text" id="messageInput" class="chat-input" placeholder="Введите сообщение..." style="width: 75%;" onkeydown="checkEnter(event)" />
+                <button class="btn-send" onclick="sendMessage()">Отправить</button>
+            </div>
+        </div>
+    </div>
 
-    <div id="error" class="error-screen" style="display: none;">
-        <h2>⛔ Доступ ограничен</h2>
-        <p>У вас нет персонального ключа.<br>Пожалуйста, получите ссылку через нашего официального Telegram-бота VIP GRAFBALAS.</p>
-    </div>
+    <!-- Ошибка доступа -->
+    <div id="error" class="error-screen" style="display: none;">
+        <div class="error-icon">🔐</div>
+        <h2>Доступ закрыт</h2>
+        <p>Недействительный или отсутствующий ключ безопасности.<br><br>Пожалуйста, получите персональную ссылку через нашего официального Telegram-бота VIP GRAFBALAS.</p>
+    </div>
 
-    <script>
-        const videoId = "Pfd1Wpy7lkk";
+    <!-- Подключаем YouTube IFrame API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+        // === НАСТРОЙКИ ===
+        const VIDEO_ID = "RSOq17EL7Is"; // Ваш ID видео
+        const SERVER_URL = "https://stream-sxnh.onrender.com"; // Ваш сервер Render
+        
+        let player;
+        let isAuth = false;
 
-        window.onload = function() {
-            const savedName = localStorage.getItem('chat_username');
-            if (savedName) {
-                document.getElementById('usernameInput').value = savedName;
-            }
+        // 1. Проверка токена при загрузке
+        window.onload = function() {
+            const savedName = localStorage.getItem('chat_username');
+            if (savedName) document.getElementById('usernameInput').value = savedName;
 
-            const urlParams = new URLSearchParams(window.location.search);
-            const userId = urlParams.get('id');
+            const urlParams = new URLSearchParams(window.location.search);
+            // ИЗМЕНЕНО: теперь проверяем token, а не id
+            const token = urlParams.get('token'); 
 
-            if (userId && userId.trim() !== "") {
-                document.getElementById('content').style.display = 'block';
-                document.getElementById('videoPlayer').src = `https://www.youtube.com/embed/${videoId}?enablejsapi=1&autoplay=0&controls=0&rel=0&modestbranding=1`;
-                
-                // Запуск периодического опроса сервера для синхронизации чата с Telegram
-                setInterval(fetchMessages, 3000);
-            } else {
-                document.getElementById('error').style.display = 'flex';
-            }
-        };
+            if (token && token.trim() !== "") {
+                isAuth = true;
+                document.getElementById('content').style.display = 'block';
+                
+                // Запуск синхронизации чата
+                fetchMessages();
+                setInterval(fetchMessages, 3000);
+            } else {
+                document.getElementById('error').style.display = 'flex';
+            }
+        };
 
-        function startStream() {
-            document.getElementById('videoPlayer').src = `https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&rel=0&modestbranding=1`;
-            document.getElementById('playOverlay').style.display = 'none';
-            document.getElementById('videoShield').style.display = 'block';
-            document.getElementById('fsBtn').style.display = 'block';
-        }
+        // 2. Инициализация кастомного плеера YouTube
+        function onYouTubeIframeAPIReady() {
+            if (!isAuth) return;
+            
+            player = new YT.Player('ytplayer', {
+                height: '100%',
+                width: '100%',
+                videoId: VIDEO_ID,
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 0, // Убираем ВСЕ кнопки YouTube
+                    'disablekb': 1, // Отключаем управление клавиатурой
+                    'fs': 0, // Отключаем стандартный фулскрин
+                    'rel': 0, // Без рекомендаций
+                    'modestbranding': 1, // Без логотипов
+                    'iv_load_policy': 3 // Без аннотаций
+                }
+            });
+        }
 
-        function toggleFullScreen() {
-            const elem = document.getElementById('videoBox');
-            if (!document.fullscreenElement) {
-                if (elem.requestFullscreen) {
-                    elem.requestFullscreen().catch(() => {});
-                } else if (elem.webkitRequestFullscreen) {
-                    elem.webkitRequestFullscreen();
-                }
-            } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                }
-            }
-        }
+        // 3. Запуск трансляции по клику на нашу кнопку
+        function startStream() {
+            if (player && typeof player.playVideo === 'function') {
+                player.playVideo();
+                document.getElementById('playOverlay').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('playOverlay').style.display = 'none';
+                }, 500);
+                document.getElementById('fsBtn').style.display = 'flex';
+            }
+        }
 
-        // Отправка сообщения напрямую на сервер Render
-        async function sendMessage() {
-            const usernameInput = document.getElementById('usernameInput');
-            const messageInput = document.getElementById('messageInput');
+        // 4. Кастомный Fullscreen на ВЕСЬ контейнер (чтобы щит оставался поверх видео)
+        function toggleFullScreen() {
+            const elem = document.getElementById('videoBox');
+            if (!document.fullscreenElement) {
+                if (elem.requestFullscreen) elem.requestFullscreen();
+                else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+                else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+            }
+        }
 
-            let name = usernameInput.value.trim() || "Резидент";
-            let text = messageInput.value.trim();
+        // === ЛОГИКА ЧАТА ===
+        async function sendMessage() {
+            const usernameInput = document.getElementById('usernameInput');
+            const messageInput = document.getElementById('messageInput');
 
-            if (!text) return;
+            let name = usernameInput.value.trim() || "Резидент";
+            let text = messageInput.value.trim();
 
-            localStorage.setItem('chat_username', name);
+            if (!text) return;
 
-            try {
-                await fetch('https://stream-sxnh.onrender.com/api/send', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name: name, text: text })
-                });
-                messageInput.value = '';
-                fetchMessages(); // Сразу обновляем чат после отправки
-            } catch (error) {
-                console.error("Ошибка отправки сообщения:", error);
-            }
-        }
+            localStorage.setItem('chat_username', name);
 
-        
-        // Получение актуальных сообщений с сервера Render
-        async function fetchMessages() {
-            try {
-                let response = await fetch('https://stream-sxnh.onrender.com/api/messages');
-                let data = await response.json();
-                const chatMessages = document.getElementById('chatMessages');
-                
-                let htmlContent = '';
-                data.messages.forEach(msg => {
-                    htmlContent += `<div class="chat-message"><span style="color: var(--gold);">${escapeHtml(msg.name)}:</span> ${escapeHtml(msg.text)}</div>`;
-                });
-                
-                // Обновляем HTML чата только если он изменился, сохраняя позицию прокрутки
-                if (chatMessages.innerHTML !== htmlContent) {
-                    let isScrolledToBottom = chatMessages.scrollHeight - chatMessages.clientHeight <= chatMessages.scrollTop + 20;
-                    chatMessages.innerHTML = htmlContent;
-                    if (isScrolledToBottom) {
-                        chatMessages.scrollTop = chatMessages.scrollHeight;
-                    }
-                }
-            } catch (e) {
-                console.error("Ошибка загрузки сообщений чата", e);
-            }
-        }
+            try {
+                await fetch(`${SERVER_URL}/api/send`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: name, text: text })
+                });
+                messageInput.value = '';
+                fetchMessages(); 
+            } catch (error) {
+                console.error("Ошибка сети:", error);
+            }
+        }
 
-        function checkEnter(e) {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
-        }
+        async function fetchMessages() {
+            try {
+                let response = await fetch(`${SERVER_URL}/api/messages`);
+                let data = await response.json();
+                const chatMessages = document.getElementById('chatMessages');
+                
+                let htmlContent = '';
+                data.messages.forEach(msg => {
+                    let authorStyle = msg.name === "Система" ? "color: #32d74b;" : "color: var(--gold);";
+                    htmlContent += `<div class="chat-message"><span class="author" style="${authorStyle}">[${escapeHtml(msg.name)}]:</span> ${escapeHtml(msg.text)}</div>`;
+                });
+                
+                if (chatMessages.innerHTML !== htmlContent) {
+                    let isScrolledToBottom = chatMessages.scrollHeight - chatMessages.clientHeight <= chatMessages.scrollTop + 30;
+                    chatMessages.innerHTML = htmlContent;
+                    if (isScrolledToBottom) {
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    }
+                }
+            } catch (e) {
+                // Тихо игнорируем ошибки сети при поллинге
+            }
+        }
 
-        function escapeHtml(text) {
-            if (!text) return '';
-            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        }
-    </script>
+        function checkEnter(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+    </script>
 </body>
 </html>
