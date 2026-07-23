@@ -90,7 +90,7 @@
             border: 0;
         }
 
-        /* Защитный слой поверх плеера, чтобы клики по логотипу YouTube не работали */
+        /* Защитный слой поверх плеера */
         .click-shield {
             position: absolute;
             top: 0;
@@ -98,7 +98,7 @@
             width: 100%;
             height: 100%;
             z-index: 10;
-            pointer-events: auto; /* перехватывает клики */
+            pointer-events: auto;
         }
 
         /* Золотая кнопка поверх всего */
@@ -306,11 +306,11 @@
                 <!-- Плеер YouTube -->
                 <div id="playerContainer"></div>
                 
-                <!-- Невидимый защитный слой поверх плеера (блокирует нажатия на элементы YouTube) -->
+                <!-- Защитный слой поверх плеера -->
                 <div class="click-shield" id="clickShield"></div>
                 
-                <!-- Красивая кнопка подключения -->
-                <div class="play-overlay" id="playOverlay">
+                <!-- Золотая кнопка подключения всегда на месте при входе -->
+                <div class="play-overlay" id="playOverlay" style="display: flex; opacity: 1;">
                     <button class="play-btn" onclick="startStream()">Подключиться к эфиру</button>
                     <p style="margin-top: 14px; color: rgba(255,255,255,0.5); font-size: 9px; text-transform: uppercase; letter-spacing: 1px;">Нажмите для синхронизации потока</p>
                 </div>
@@ -361,7 +361,7 @@
         let isAuth = false;
         let player;
 
-                window.onload = async function() {
+        window.onload = async function() {
             const savedName = localStorage.getItem('chat_username');
             if (savedName) document.getElementById('usernameInput').value = savedName;
 
@@ -400,7 +400,6 @@
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
         };
 
-
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('playerContainer', {
                 height: '100%',
@@ -412,31 +411,30 @@
                     'disablekb': 1,
                     'iv_load_policy': 3,
                     'modestbranding': 1,
-                    'rel': 0
+                    'rel': 0,
+                    'autoplay': 0
                 }
             });
         }
 
         function startStream() {
+            // Принудительно запускаем видео через официальный API плеера
             if (player && typeof player.playVideo === 'function') {
                 player.playVideo();
             } else {
+                // Запасной вариант, если API еще не прогрузился
                 const container = document.getElementById('playerContainer');
                 container.innerHTML = `<iframe src="https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1&controls=0&disablekb=1&modestbranding=1&rel=0&playsinline=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"></iframe>`;
             }
             
-            // Плавное скрытие золотой кнопки
+            // Плавное скрытие золотой кнопки по клику
             const overlay = document.getElementById('playOverlay');
             overlay.style.opacity = '0';
             setTimeout(() => {
                 overlay.style.display = 'none';
             }, 400);
 
-            // Убираем защитный экран после старта, чтобы можно было управлять воспроизведением (если нужно), 
-            // но логотип ютуба останется заблокированным рамкой или параметрами. 
-            // Если нужно жестко заблокировать ВСЕ клики по видео, оставьте строчку ниже:
-            // document.getElementById('clickShield').style.pointerEvents = 'none'; // или оставьте 'auto' для полной защиты
-            
+            // Показываем кнопку полноэкранного режима
             document.getElementById('fsBtn').style.display = 'flex';
         }
 
