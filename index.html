@@ -90,14 +90,14 @@
             border: 0;
         }
 
-        /* Экранирующий слой для красивой кнопки */
+        /* Та самая красивая золотая кнопка */
         .play-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(5, 5, 5, 0.92);
+            background: rgba(5, 5, 5, 0.95);
             backdrop-filter: blur(10px);
             display: flex;
             flex-direction: column;
@@ -292,9 +292,9 @@
         
         <div class="video-wrapper">
             <div class="video-container" id="videoBox">
-                <div id="ytplayer"></div>
+                <!-- Сюда динамически вставится видео при клике -->
+                <div id="playerContainer"></div>
                 
-                <!-- Возвращенная красивая кнопка с гарантированным срабатыванием -->
                 <div class="play-overlay" id="playOverlay">
                     <button class="play-btn" onclick="startStream()">Подключиться к эфиру</button>
                     <p style="margin-top: 14px; color: rgba(255,255,255,0.5); font-size: 9px; text-transform: uppercase; letter-spacing: 1px;">Нажмите для синхронизации потока</p>
@@ -339,12 +339,10 @@
         <p>Недействительный или отсутствующий ключ безопасности.<br><br>Пожалуйста, получите персональную ссылку через официального бота.</p>
     </div>
 
-    <script src="https://www.youtube.com/iframe_api"></script>
     <script>
         const VIDEO_ID = "RSOql7EL7Is"; 
         const SERVER_URL = "https://stream-sxnh.onrender.com";
         
-        let player;
         let isAuth = false;
 
         window.onload = function() {
@@ -364,35 +362,18 @@
             }
         };
 
-        function onYouTubeIframeAPIReady() {
-            if (!isAuth) return;
-            
-            player = new YT.Player('ytplayer', {
-                height: '100%',
-                width: '100%',
-                videoId: VIDEO_ID,
-                playerVars: {
-                    'autoplay': 0,
-                    'controls': 0,
-                    'disablekb': 1,
-                    'fs': 0,
-                    'rel': 0,
-                    'modestbranding': 1,
-                    'iv_load_policy': 3
-                }
-            });
-        }
-
+        // Мгновенный запуск через вставку iframe по клику
         function startStream() {
-            if (player && typeof player.playVideo === 'function') {
-                player.playVideo();
-                const overlay = document.getElementById('playOverlay');
-                overlay.style.opacity = '0';
-                setTimeout(() => {
-                    overlay.style.display = 'none';
-                }, 400);
-                document.getElementById('fsBtn').style.display = 'flex';
-            }
+            const container = document.getElementById('playerContainer');
+            container.innerHTML = `<iframe src="https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1&controls=0&modestbranding=1&rel=0" allow="autoplay"></iframe>`;
+            
+            const overlay = document.getElementById('playOverlay');
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 400);
+            
+            document.getElementById('fsBtn').style.display = 'flex';
         }
 
         function toggleFullScreen() {
