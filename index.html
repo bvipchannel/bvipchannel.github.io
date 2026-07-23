@@ -29,7 +29,7 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            padding: 30px 20px;
+            padding: 30px 15px; /* Немного уменьшил отступы для мобильных */
             box-sizing: border-box;
             overflow-x: hidden;
         }
@@ -48,11 +48,11 @@
         /* Элитный Заголовок */
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         h1 {
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 700;
             margin: 0 0 8px 0;
             letter-spacing: 2px;
@@ -64,7 +64,7 @@
 
         .subtitle {
             color: var(--gold);
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 500;
             letter-spacing: 3px;
             text-transform: uppercase;
@@ -97,11 +97,9 @@
             width: 100%;
             height: 100%;
             border: 0;
-            /* Отключаем события мыши для самого iframe */
             pointer-events: none; 
         }
 
-        /* Щит, полностью перекрывающий клики на YouTube */
         .video-shield {
             position: absolute;
             top: 0;
@@ -112,7 +110,6 @@
             background: transparent;
         }
 
-        /* Оверлей запуска */
         .play-overlay {
             position: absolute;
             top: 0;
@@ -127,14 +124,17 @@
             justify-content: center;
             z-index: 20;
             transition: opacity 0.5s ease;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         .play-btn {
             background: var(--gold-gradient);
             color: #000;
             border: none;
-            padding: 18px 45px;
-            font-size: 14px;
+            padding: 16px 30px;
+            font-size: 13px;
             font-weight: 700;
             letter-spacing: 1.5px;
             border-radius: 50px;
@@ -150,7 +150,6 @@
             box-shadow: 0 15px 40px rgba(212, 175, 55, 0.4);
         }
 
-        /* Кастомные контролы */
         .custom-controls {
             display: flex;
             justify-content: flex-end;
@@ -162,8 +161,8 @@
             background: rgba(255, 255, 255, 0.05);
             color: var(--text-main);
             border: 1px solid var(--border-color);
-            padding: 10px 20px;
-            font-size: 13px;
+            padding: 10px 15px;
+            font-size: 12px;
             font-weight: 500;
             border-radius: 12px;
             cursor: pointer;
@@ -186,7 +185,7 @@
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 20px;
-            padding: 25px;
+            padding: 20px;
             backdrop-filter: blur(20px);
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
         }
@@ -233,7 +232,7 @@
             font-size: 14px;
             color: #e5e5ea;
             border: 1px solid inset var(--border-color);
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             scroll-behavior: smooth;
         }
 
@@ -253,15 +252,18 @@
             margin-right: 5px;
         }
 
+        /* ИСПРАВЛЕННАЯ ФОРМА ЧАТА */
         .chat-form {
             display: flex;
-            gap: 12px;
+            gap: 8px;
+            align-items: center;
+            width: 100%;
         }
 
         .chat-input {
             background: rgba(0, 0, 0, 0.4);
             border: 1px solid var(--border-color);
-            padding: 14px 18px;
+            padding: 14px 12px;
             border-radius: 12px;
             color: #fff;
             font-size: 14px;
@@ -275,22 +277,36 @@
             background: rgba(0, 0, 0, 0.6);
         }
 
+        #usernameInput {
+            flex: 1; /* Занимает 1 часть пространства */
+            min-width: 60px;
+            max-width: 100px;
+            text-align: center;
+        }
+
+        #messageInput {
+            flex: 3; /* Занимает 3 части пространства */
+        }
+
+        /* НОВАЯ КНОПКА ОТПРАВКИ (ИКОНКА) */
         .btn-send {
             background: var(--text-main);
             color: #000;
             border: none;
-            padding: 0 25px;
+            width: 48px;
+            height: 48px;
             border-radius: 12px;
-            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
-            font-size: 14px;
-            font-family: 'Montserrat', sans-serif;
             transition: all 0.2s ease;
+            flex-shrink: 0; /* Чтобы кнопка не сжималась */
         }
 
         .btn-send:hover {
             background: #fff;
-            transform: scale(1.02);
+            transform: scale(1.05);
         }
 
         /* Экран ошибки */
@@ -301,6 +317,7 @@
             justify-content: center;
             height: 100vh;
             text-align: center;
+            padding: 20px;
         }
         
         .error-icon {
@@ -343,7 +360,7 @@
                 <!-- Оверлей до запуска -->
                 <div class="play-overlay" id="playOverlay">
                     <button class="play-btn" onclick="startStream()">Подключиться к эфиру</button>
-                    <p style="margin-top: 20px; color: rgba(255,255,255,0.5); font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Нажмите для синхронизации потока</p>
+                    <p style="margin-top: 15px; color: rgba(255,255,255,0.5); font-size: 10px; text-transform: uppercase; letter-spacing: 1px;">Нажмите для синхронизации потока</p>
                 </div>
             </div>
 
@@ -360,7 +377,7 @@
                 <h3>💬 Live Чат</h3>
                 <div class="online-indicator">
                     <div class="dot"></div>
-                    <span>Синхронизировано с Telegram</span>
+                    <span>Синхронизировано</span>
                 </div>
             </div>
             
@@ -369,9 +386,14 @@
             </div>
             
             <div class="chat-form">
-                <input type="text" id="usernameInput" class="chat-input" placeholder="Ваше имя" style="width: 25%;" />
-                <input type="text" id="messageInput" class="chat-input" placeholder="Введите сообщение..." style="width: 75%;" onkeydown="checkEnter(event)" />
-                <button class="btn-send" onclick="sendMessage()">Отправить</button>
+                <input type="text" id="usernameInput" class="chat-input" placeholder="Имя" />
+                <input type="text" id="messageInput" class="chat-input" placeholder="Сообщение..." onkeydown="checkEnter(event)" />
+                <button class="btn-send" onclick="sendMessage()" title="Отправить">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
             </div>
         </div>
     </div>
@@ -380,14 +402,14 @@
     <div id="error" class="error-screen" style="display: none;">
         <div class="error-icon">🔐</div>
         <h2>Доступ закрыт</h2>
-        <p>Недействительный или отсутствующий ключ безопасности.<br><br>Пожалуйста, получите персональную ссылку через нашего официального Telegram-бота VIP GRAFBALAS.</p>
+        <p>Недействительный или отсутствующий ключ безопасности.<br><br>Пожалуйста, получите персональную ссылку через нашего официального Telegram-бота.</p>
     </div>
 
     <!-- Подключаем YouTube IFrame API -->
     <script src="https://www.youtube.com/iframe_api"></script>
     <script>
         // === НАСТРОЙКИ ===
-        const VIDEO_ID = "RSOq17EL7Is"; // Ваш ID видео
+        const VIDEO_ID = "RSOql7EL7Is"; // Ваш тестовый ID видео
         const SERVER_URL = "https://stream-sxnh.onrender.com"; // Ваш сервер Render
         
         let player;
@@ -399,7 +421,6 @@
             if (savedName) document.getElementById('usernameInput').value = savedName;
 
             const urlParams = new URLSearchParams(window.location.search);
-            // ИЗМЕНЕНО: теперь проверяем token, а не id
             const token = urlParams.get('token'); 
 
             if (token && token.trim() !== "") {
@@ -424,17 +445,17 @@
                 videoId: VIDEO_ID,
                 playerVars: {
                     'autoplay': 0,
-                    'controls': 0, // Убираем ВСЕ кнопки YouTube
-                    'disablekb': 1, // Отключаем управление клавиатурой
-                    'fs': 0, // Отключаем стандартный фулскрин
-                    'rel': 0, // Без рекомендаций
-                    'modestbranding': 1, // Без логотипов
-                    'iv_load_policy': 3 // Без аннотаций
+                    'controls': 0,
+                    'disablekb': 1,
+                    'fs': 0,
+                    'rel': 0,
+                    'modestbranding': 1,
+                    'iv_load_policy': 3
                 }
             });
         }
 
-        // 3. Запуск трансляции по клику на нашу кнопку
+        // 3. Запуск трансляции по клику
         function startStream() {
             if (player && typeof player.playVideo === 'function') {
                 player.playVideo();
@@ -446,7 +467,7 @@
             }
         }
 
-        // 4. Кастомный Fullscreen на ВЕСЬ контейнер (чтобы щит оставался поверх видео)
+        // 4. Кастомный Fullscreen
         function toggleFullScreen() {
             const elem = document.getElementById('videoBox');
             if (!document.fullscreenElement) {
@@ -503,7 +524,7 @@
                     }
                 }
             } catch (e) {
-                // Тихо игнорируем ошибки сети при поллинге
+                // Тихо игнорируем ошибки сети
             }
         }
 
