@@ -11,7 +11,6 @@
             --card-bg: rgba(15, 15, 15, 0.6);
             --border-color: rgba(255, 255, 255, 0.06);
             --gold: #d4af37;
-            --gold-hover: #f1c40f;
             --gold-gradient: linear-gradient(135deg, #d4af37 0%, #aa8c2c 100%);
             --text-main: #f5f5f7;
             --text-muted: #86868b;
@@ -29,7 +28,7 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            padding: 30px 15px; /* Немного уменьшил отступы для мобильных */
+            padding: 20px 12px;
             box-sizing: border-box;
             overflow-x: hidden;
         }
@@ -37,24 +36,17 @@
         .container {
             width: 100%;
             max-width: 1000px;
-            animation: fadeIn 0.8s ease-out forwards;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Элитный Заголовок */
         .header {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         h1 {
-            font-size: 26px;
+            font-size: 22px;
             font-weight: 700;
-            margin: 0 0 8px 0;
+            margin: 0 0 5px 0;
             letter-spacing: 2px;
             background: linear-gradient(135deg, #ffffff 20%, #86868b 100%);
             -webkit-background-clip: text;
@@ -64,21 +56,20 @@
 
         .subtitle {
             color: var(--gold);
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 500;
             letter-spacing: 3px;
             text-transform: uppercase;
         }
 
-        /* Контейнер плеера */
         .video-wrapper {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 10px;
+            border-radius: 16px;
+            padding: 8px;
             backdrop-filter: blur(20px);
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
         .video-container {
@@ -86,7 +77,7 @@
             width: 100%;
             padding-bottom: 56.25%;
             background: #000;
-            border-radius: 12px;
+            border-radius: 10px;
             overflow: hidden;
         }
 
@@ -105,9 +96,10 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
+            height: calc(100% - 60px); /* Не перекрываем нижнюю панель плеера */
             z-index: 10;
             background: transparent;
+            pointer-events: none; /* Щит больше не блокирует клики */
         }
 
         .play-overlay {
@@ -116,14 +108,13 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(5, 5, 5, 0.85);
+            background: rgba(5, 5, 5, 0.9);
             backdrop-filter: blur(10px);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 20;
-            transition: opacity 0.5s ease;
+            z-index: 30; /* Выше всего */
             text-align: center;
             padding: 20px;
             box-sizing: border-box;
@@ -133,27 +124,21 @@
             background: var(--gold-gradient);
             color: #000;
             border: none;
-            padding: 16px 30px;
+            padding: 16px 32px;
             font-size: 13px;
             font-weight: 700;
             letter-spacing: 1.5px;
             border-radius: 50px;
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.25);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
             cursor: pointer;
-            transition: all 0.3s ease;
             text-transform: uppercase;
             font-family: 'Montserrat', sans-serif;
-        }
-
-        .play-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 40px rgba(212, 175, 55, 0.4);
         }
 
         .custom-controls {
             display: flex;
             justify-content: flex-end;
-            margin-top: 15px;
+            margin-top: 10px;
             padding: 0 5px;
         }
 
@@ -161,47 +146,37 @@
             background: rgba(255, 255, 255, 0.05);
             color: var(--text-main);
             border: 1px solid var(--border-color);
-            padding: 10px 15px;
-            font-size: 12px;
-            font-weight: 500;
-            border-radius: 12px;
+            padding: 8px 14px;
+            font-size: 11px;
+            border-radius: 10px;
             cursor: pointer;
-            backdrop-filter: blur(5px);
-            transition: all 0.2s ease;
-            font-family: 'Montserrat', sans-serif;
             display: flex;
             align-items: center;
-            gap: 8px;
-        }
-
-        .action-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.2);
-            color: #fff;
+            gap: 6px;
+            font-family: 'Montserrat', sans-serif;
         }
 
         /* Чат */
         .chat-section {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 20px;
+            border-radius: 16px;
+            padding: 15px;
             backdrop-filter: blur(20px);
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
         }
 
         .chat-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
             border-bottom: 1px solid var(--border-color);
         }
 
         .chat-header h3 {
             margin: 0;
-            font-size: 15px;
+            font-size: 13px;
             font-weight: 600;
             letter-spacing: 1px;
             text-transform: uppercase;
@@ -211,39 +186,37 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-muted);
         }
 
         .dot {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             background-color: #32d74b;
             border-radius: 50%;
-            box-shadow: 0 0 10px #32d74b;
+            box-shadow: 0 0 8px #32d74b;
         }
 
         .chat-box {
-            height: 250px;
+            height: 200px;
             background: rgba(0, 0, 0, 0.3);
-            border-radius: 12px;
-            padding: 15px;
+            border-radius: 10px;
+            padding: 10px;
             overflow-y: auto;
-            font-size: 14px;
+            font-size: 13px;
             color: #e5e5ea;
-            border: 1px solid inset var(--border-color);
-            margin-bottom: 15px;
-            scroll-behavior: smooth;
+            border: 1px solid var(--border-color);
+            margin-bottom: 12px;
         }
 
-        .chat-box::-webkit-scrollbar { width: 4px; }
-        .chat-box::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
+        .chat-box::-webkit-scrollbar { width: 3px; }
+        .chat-box::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 3px; }
 
         .chat-message {
-            margin-bottom: 12px;
-            line-height: 1.5;
+            margin-bottom: 10px;
+            line-height: 1.4;
             word-break: break-word;
-            animation: fadeIn 0.3s ease-out;
         }
 
         .chat-message span.author {
@@ -252,64 +225,54 @@
             margin-right: 5px;
         }
 
-        /* ИСПРАВЛЕННАЯ ФОРМА ЧАТА */
+        /* Жесткая структура формы чата, чтобы ничто никуда не улетало */
         .chat-form {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             align-items: center;
             width: 100%;
         }
 
         .chat-input {
-            background: rgba(0, 0, 0, 0.4);
+            background: rgba(0, 0, 0, 0.5);
             border: 1px solid var(--border-color);
-            padding: 14px 12px;
-            border-radius: 12px;
+            padding: 12px 10px;
+            border-radius: 10px;
             color: #fff;
-            font-size: 14px;
+            font-size: 13px;
             outline: none;
             font-family: 'Montserrat', sans-serif;
-            transition: all 0.3s ease;
+            box-sizing: border-box;
         }
 
         .chat-input:focus {
             border-color: var(--gold);
-            background: rgba(0, 0, 0, 0.6);
         }
 
         #usernameInput {
-            flex: 1; /* Занимает 1 часть пространства */
-            min-width: 60px;
-            max-width: 100px;
-            text-align: center;
+            width: 28%;
+            flex-shrink: 0;
         }
 
         #messageInput {
-            flex: 3; /* Занимает 3 части пространства */
+            width: 58%;
+            flex-grow: 1;
         }
 
-        /* НОВАЯ КНОПКА ОТПРАВКИ (ИКОНКА) */
         .btn-send {
             background: var(--text-main);
             color: #000;
             border: none;
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.2s ease;
-            flex-shrink: 0; /* Чтобы кнопка не сжималась */
+            flex-shrink: 0;
         }
 
-        .btn-send:hover {
-            background: #fff;
-            transform: scale(1.05);
-        }
-
-        /* Экран ошибки */
         .error-screen {
             display: flex;
             flex-direction: column;
@@ -320,53 +283,33 @@
             padding: 20px;
         }
         
-        .error-icon {
-            font-size: 48px;
-            margin-bottom: 20px;
-        }
-
-        .error-screen h2 {
-            font-size: 24px;
-            margin-bottom: 12px;
-            color: #ff453a;
-            letter-spacing: 1px;
-        }
-
-        .error-screen p {
-            color: var(--text-muted);
-            font-size: 14px;
-            line-height: 1.6;
-            max-width: 400px;
-        }
+        .error-icon { font-size: 42px; margin-bottom: 15px; }
+        .error-screen h2 { font-size: 20px; margin-bottom: 10px; color: #ff453a; }
+        .error-screen p { color: var(--text-muted); font-size: 13px; line-height: 1.5; }
     </style>
 </head>
 <body>
 
-    <!-- Успешная авторизация -->
     <div id="content" class="container" style="display: none;">
         <div class="header">
             <h1>VIP GRAFBALAS</h1>
             <div class="subtitle">Закрытая трансляция</div>
         </div>
         
-        <div class="video-wrapper" id="videoWrapper">
+        <div class="video-wrapper">
             <div class="video-container" id="videoBox">
-                <!-- Сюда API YouTube вставит плеер -->
                 <div id="ytplayer"></div>
-                
-                <!-- Щит от кликов -->
                 <div class="video-shield"></div>
                 
-                <!-- Оверлей до запуска -->
                 <div class="play-overlay" id="playOverlay">
                     <button class="play-btn" onclick="startStream()">Подключиться к эфиру</button>
-                    <p style="margin-top: 15px; color: rgba(255,255,255,0.5); font-size: 10px; text-transform: uppercase; letter-spacing: 1px;">Нажмите для синхронизации потока</p>
+                    <p style="margin-top: 12px; color: rgba(255,255,255,0.5); font-size: 9px; text-transform: uppercase; letter-spacing: 1px;">Нажмите для запуска потока</p>
                 </div>
             </div>
 
             <div class="custom-controls">
                 <button class="action-btn" id="fsBtn" onclick="toggleFullScreen()" style="display: none;">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
                     На весь экран
                 </button>
             </div>
@@ -381,15 +324,13 @@
                 </div>
             </div>
             
-            <div class="chat-box" id="chatMessages">
-                <!-- Сообщения -->
-            </div>
+            <div class="chat-box" id="chatMessages"></div>
             
             <div class="chat-form">
                 <input type="text" id="usernameInput" class="chat-input" placeholder="Имя" />
                 <input type="text" id="messageInput" class="chat-input" placeholder="Сообщение..." onkeydown="checkEnter(event)" />
                 <button class="btn-send" onclick="sendMessage()" title="Отправить">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="22" y1="2" x2="11" y2="13"></line>
                         <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                     </svg>
@@ -398,24 +339,20 @@
         </div>
     </div>
 
-    <!-- Ошибка доступа -->
     <div id="error" class="error-screen" style="display: none;">
         <div class="error-icon">🔐</div>
         <h2>Доступ закрыт</h2>
-        <p>Недействительный или отсутствующий ключ безопасности.<br><br>Пожалуйста, получите персональную ссылку через нашего официального Telegram-бота.</p>
+        <p>Недействительный или отсутствующий ключ безопасности.<br><br>Пожалуйста, получите персональную ссылку через официального бота.</p>
     </div>
 
-    <!-- Подключаем YouTube IFrame API -->
     <script src="https://www.youtube.com/iframe_api"></script>
     <script>
-        // === НАСТРОЙКИ ===
-        const VIDEO_ID = "RSOql7EL7Is"; // Ваш тестовый ID видео
-        const SERVER_URL = "https://stream-sxnh.onrender.com"; // Ваш сервер Render
+        const VIDEO_ID = "RSOql7EL7Is"; 
+        const SERVER_URL = "https://stream-sxnh.onrender.com";
         
         let player;
         let isAuth = false;
 
-        // 1. Проверка токена при загрузке
         window.onload = function() {
             const savedName = localStorage.getItem('chat_username');
             if (savedName) document.getElementById('usernameInput').value = savedName;
@@ -426,8 +363,6 @@
             if (token && token.trim() !== "") {
                 isAuth = true;
                 document.getElementById('content').style.display = 'block';
-                
-                // Запуск синхронизации чата
                 fetchMessages();
                 setInterval(fetchMessages, 3000);
             } else {
@@ -435,7 +370,6 @@
             }
         };
 
-        // 2. Инициализация кастомного плеера YouTube
         function onYouTubeIframeAPIReady() {
             if (!isAuth) return;
             
@@ -455,19 +389,17 @@
             });
         }
 
-        // 3. Запуск трансляции по клику
         function startStream() {
             if (player && typeof player.playVideo === 'function') {
                 player.playVideo();
                 document.getElementById('playOverlay').style.opacity = '0';
                 setTimeout(() => {
                     document.getElementById('playOverlay').style.display = 'none';
-                }, 500);
+                }, 400);
                 document.getElementById('fsBtn').style.display = 'flex';
             }
         }
 
-        // 4. Кастомный Fullscreen
         function toggleFullScreen() {
             const elem = document.getElementById('videoBox');
             if (!document.fullscreenElement) {
@@ -479,7 +411,6 @@
             }
         }
 
-        // === ЛОГИКА ЧАТА ===
         async function sendMessage() {
             const usernameInput = document.getElementById('usernameInput');
             const messageInput = document.getElementById('messageInput');
@@ -523,9 +454,477 @@
                         chatMessages.scrollTop = chatMessages.scrollHeight;
                     }
                 }
-            } catch (e) {
-                // Тихо игнорируем ошибки сети
+            } catch (e) {}
+        }
+
+        function checkEnter(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIP Трансляция | GRAFBALAS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #050505;
+            --card-bg: rgba(15, 15, 15, 0.6);
+            --border-color: rgba(255, 255, 255, 0.06);
+            --gold: #d4af37;
+            --gold-gradient: linear-gradient(135deg, #d4af37 0%, #aa8c2c 100%);
+            --text-main: #f5f5f7;
+            --text-muted: #86868b;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
+            color: var(--text-main);
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px 12px;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0 0 5px 0;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #ffffff 20%, #86868b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            color: var(--gold);
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .video-wrapper {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 8px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            pointer-events: none; 
+        }
+
+        .video-shield {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: calc(100% - 60px); /* Не перекрываем нижнюю панель плеера */
+            z-index: 10;
+            background: transparent;
+            pointer-events: none; /* Щит больше не блокирует клики */
+        }
+
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 5, 5, 0.9);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 30; /* Выше всего */
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .play-btn {
+            background: var(--gold-gradient);
+            color: #000;
+            border: none;
+            padding: 16px 32px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+            cursor: pointer;
+            text-transform: uppercase;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .custom-controls {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+            padding: 0 5px;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 8px 14px;
+            font-size: 11px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Чат */
+        .chat-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 15px;
+            backdrop-filter: blur(20px);
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .chat-header h3 {
+            margin: 0;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .online-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .dot {
+            width: 6px;
+            height: 6px;
+            background-color: #32d74b;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #32d74b;
+        }
+
+        .chat-box {
+            height: 200px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 10px;
+            overflow-y: auto;
+            font-size: 13px;
+            color: #e5e5ea;
+            border: 1px solid var(--border-color);
+            margin-bottom: 12px;
+        }
+
+        .chat-box::-webkit-scrollbar { width: 3px; }
+        .chat-box::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 3px; }
+
+        .chat-message {
+            margin-bottom: 10px;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        .chat-message span.author {
+            color: var(--gold);
+            font-weight: 600;
+            margin-right: 5px;
+        }
+
+        /* Жесткая структура формы чата, чтобы ничто никуда не улетало */
+        .chat-form {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            width: 100%;
+        }
+
+        .chat-input {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-color);
+            padding: 12px 10px;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 13px;
+            outline: none;
+            font-family: 'Montserrat', sans-serif;
+            box-sizing: border-box;
+        }
+
+        .chat-input:focus {
+            border-color: var(--gold);
+        }
+
+        #usernameInput {
+            width: 28%;
+            flex-shrink: 0;
+        }
+
+        #messageInput {
+            width: 58%;
+            flex-grow: 1;
+        }
+
+        .btn-send {
+            background: var(--text-main);
+            color: #000;
+            border: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .error-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .error-icon { font-size: 42px; margin-bottom: 15px; }
+        .error-screen h2 { font-size: 20px; margin-bottom: 10px; color: #ff453a; }
+        .error-screen p { color: var(--text-muted); font-size: 13px; line-height: 1.5; }
+    </style>
+</head>
+<body>
+
+    <div id="content" class="container" style="display: none;">
+        <div class="header">
+            <h1>VIP GRAFBALAS</h1>
+            <div class="subtitle">Закрытая трансляция</div>
+        </div>
+        
+        <div class="video-wrapper">
+            <div class="video-container" id="videoBox">
+                <div id="ytplayer"></div>
+                <div class="video-shield"></div>
+                
+                <div class="play-overlay" id="playOverlay">
+                    <button class="play-btn" onclick="startStream()">Подключиться к эфиру</button>
+                    <p style="margin-top: 12px; color: rgba(255,255,255,0.5); font-size: 9px; text-transform: uppercase; letter-spacing: 1px;">Нажмите для запуска потока</p>
+                </div>
+            </div>
+
+            <div class="custom-controls">
+                <button class="action-btn" id="fsBtn" onclick="toggleFullScreen()" style="display: none;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+                    На весь экран
+                </button>
+            </div>
+        </div>
+
+        <div class="chat-section">
+            <div class="chat-header">
+                <h3>💬 Live Чат</h3>
+                <div class="online-indicator">
+                    <div class="dot"></div>
+                    <span>Синхронизировано</span>
+                </div>
+            </div>
+            
+            <div class="chat-box" id="chatMessages"></div>
+            
+            <div class="chat-form">
+                <input type="text" id="usernameInput" class="chat-input" placeholder="Имя" />
+                <input type="text" id="messageInput" class="chat-input" placeholder="Сообщение..." onkeydown="checkEnter(event)" />
+                <button class="btn-send" onclick="sendMessage()" title="Отправить">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="error" class="error-screen" style="display: none;">
+        <div class="error-icon">🔐</div>
+        <h2>Доступ закрыт</h2>
+        <p>Недействительный или отсутствующий ключ безопасности.<br><br>Пожалуйста, получите персональную ссылку через официального бота.</p>
+    </div>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+        const VIDEO_ID = "RSOql7EL7Is"; 
+        const SERVER_URL = "https://stream-sxnh.onrender.com";
+        
+        let player;
+        let isAuth = false;
+
+        window.onload = function() {
+            const savedName = localStorage.getItem('chat_username');
+            if (savedName) document.getElementById('usernameInput').value = savedName;
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token'); 
+
+            if (token && token.trim() !== "") {
+                isAuth = true;
+                document.getElementById('content').style.display = 'block';
+                fetchMessages();
+                setInterval(fetchMessages, 3000);
+            } else {
+                document.getElementById('error').style.display = 'flex';
             }
+        };
+
+        function onYouTubeIframeAPIReady() {
+            if (!isAuth) return;
+            
+            player = new YT.Player('ytplayer', {
+                height: '100%',
+                width: '100%',
+                videoId: VIDEO_ID,
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 0,
+                    'disablekb': 1,
+                    'fs': 0,
+                    'rel': 0,
+                    'modestbranding': 1,
+                    'iv_load_policy': 3
+                }
+            });
+        }
+
+        function startStream() {
+            if (player && typeof player.playVideo === 'function') {
+                player.playVideo();
+                document.getElementById('playOverlay').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('playOverlay').style.display = 'none';
+                }, 400);
+                document.getElementById('fsBtn').style.display = 'flex';
+            }
+        }
+
+        function toggleFullScreen() {
+            const elem = document.getElementById('videoBox');
+            if (!document.fullscreenElement) {
+                if (elem.requestFullscreen) elem.requestFullscreen();
+                else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+                else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+            }
+        }
+
+        async function sendMessage() {
+            const usernameInput = document.getElementById('usernameInput');
+            const messageInput = document.getElementById('messageInput');
+
+            let name = usernameInput.value.trim() || "Резидент";
+            let text = messageInput.value.trim();
+
+            if (!text) return;
+
+            localStorage.setItem('chat_username', name);
+
+            try {
+                await fetch(`${SERVER_URL}/api/send`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: name, text: text })
+                });
+                messageInput.value = '';
+                fetchMessages(); 
+            } catch (error) {
+                console.error("Ошибка сети:", error);
+            }
+        }
+
+        async function fetchMessages() {
+            try {
+                let response = await fetch(`${SERVER_URL}/api/messages`);
+                let data = await response.json();
+                const chatMessages = document.getElementById('chatMessages');
+                
+                let htmlContent = '';
+                data.messages.forEach(msg => {
+                    let authorStyle = msg.name === "Система" ? "color: #32d74b;" : "color: var(--gold);";
+                    htmlContent += `<div class="chat-message"><span class="author" style="${authorStyle}">[${escapeHtml(msg.name)}]:</span> ${escapeHtml(msg.text)}</div>`;
+                });
+                
+                if (chatMessages.innerHTML !== htmlContent) {
+                    let isScrolledToBottom = chatMessages.scrollHeight - chatMessages.clientHeight <= chatMessages.scrollTop + 30;
+                    chatMessages.innerHTML = htmlContent;
+                    if (isScrolledToBottom) {
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    }
+                }
+            } catch (e) {}
         }
 
         function checkEnter(e) {
