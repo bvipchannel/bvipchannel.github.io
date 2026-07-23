@@ -33,304 +33,78 @@
             overflow-x: hidden;
         }
 
-        .container {
-            width: 100%;
-            max-width: 1000px;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
+        .container { width: 100%; max-width: 1000px; }
+        .header { text-align: center; margin-bottom: 20px; }
         h1 {
-            font-size: 22px;
-            font-weight: 700;
-            margin: 0 0 5px 0;
-            letter-spacing: 2px;
+            font-size: 22px; font-weight: 700; margin: 0 0 5px 0; letter-spacing: 2px;
             background: linear-gradient(135deg, #ffffff 20%, #86868b 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-transform: uppercase;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase;
         }
-
-        .subtitle {
-            color: var(--gold);
-            font-size: 10px;
-            font-weight: 500;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-        }
+        .subtitle { color: var(--gold); font-size: 10px; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; }
 
         .video-wrapper {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 8px;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            margin-bottom: 12px;
+            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px;
+            padding: 8px; backdrop-filter: blur(20px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); margin-bottom: 12px;
         }
 
-        .video-container {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%;
-            background: #000;
-            border-radius: 10px;
-            overflow: hidden;
-        }
+        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; background: #000; border-radius: 10px; overflow: hidden; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        .click-shield { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: auto; }
 
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: 0;
-        }
-
-        /* Защитный слой поверх плеера */
-        .click-shield {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 10;
-            pointer-events: auto;
-        }
-
-        /* Золотая кнопка поверх всего */
         .play-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(5, 5, 5, 0.95);
-            backdrop-filter: blur(10px);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 30;
-            transition: opacity 0.4s ease;
-            text-align: center;
-            padding: 20px;
-            box-sizing: border-box;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(10px);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 30; transition: opacity 0.4s ease; text-align: center; padding: 20px; box-sizing: border-box;
         }
 
         .play-btn {
-            background: var(--gold-gradient);
-            color: #000;
-            border: none;
-            padding: 16px 32px;
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            border-radius: 50px;
-            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
-            cursor: pointer;
-            text-transform: uppercase;
-            font-family: 'Montserrat', sans-serif;
-            transition: transform 0.2s ease;
+            background: var(--gold-gradient); color: #000; border: none; padding: 16px 32px; font-size: 13px; font-weight: 700;
+            letter-spacing: 1.5px; border-radius: 50px; box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+            cursor: pointer; text-transform: uppercase; font-family: 'Montserrat', sans-serif; transition: transform 0.2s ease;
         }
-
-        .play-btn:active {
-            transform: scale(0.95);
-        }
-
-        .custom-controls {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 10px;
-            padding: 0 5px;
-        }
+        .play-btn:active { transform: scale(0.95); }
+        .custom-controls { display: flex; justify-content: flex-end; margin-top: 10px; padding: 0 5px; }
 
         .action-btn {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-main);
-            border: 1px solid var(--border-color);
-            padding: 8px 14px;
-            font-size: 11px;
-            border-radius: 10px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-family: 'Montserrat', sans-serif;
+            background: rgba(255, 255, 255, 0.05); color: var(--text-main); border: 1px solid var(--border-color);
+            padding: 8px 14px; font-size: 11px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-family: 'Montserrat', sans-serif;
         }
 
-        /* Инфо-блок синхронизации с Telegram */
         .tg-sync-info {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 10px 15px;
-            margin-bottom: 15px;
-            font-size: 11px;
-            color: var(--text-muted);
-            backdrop-filter: blur(10px);
-            text-align: center;
+            display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--card-bg);
+            border: 1px solid var(--border-color); border-radius: 12px; padding: 10px 15px; margin-bottom: 15px;
+            font-size: 11px; color: var(--text-muted); backdrop-filter: blur(10px); text-align: center;
         }
+        .tg-sync-info span { color: var(--text-main); font-weight: 500; }
+        .tg-icon { color: #229ed9; display: flex; align-items: center; }
 
-        .tg-sync-info span {
-            color: var(--text-main);
-            font-weight: 500;
-        }
+        .chat-section { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 15px; backdrop-filter: blur(20px); margin-bottom: 20px; }
+        .chat-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
+        .chat-header h3 { margin: 0; font-size: 13px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+        .online-indicator { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-muted); }
+        .dot { width: 6px; height: 6px; background-color: #32d74b; border-radius: 50%; box-shadow: 0 0 8px #32d74b; }
 
-        .tg-icon {
-            color: #229ed9;
-            display: flex;
-            align-items: center;
-        }
-
-        /* Чат */
-        .chat-section {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 15px;
-            backdrop-filter: blur(20px);
-            margin-bottom: 20px;
-        }
-
-        .chat-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .chat-header h3 {
-            margin: 0;
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .online-indicator {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-
-        .dot {
-            width: 6px;
-            height: 6px;
-            background-color: #32d74b;
-            border-radius: 50%;
-            box-shadow: 0 0 8px #32d74b;
-        }
-
-        .chat-box {
-            height: 200px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            padding: 10px;
-            overflow-y: auto;
-            font-size: 13px;
-            color: #e5e5ea;
-            border: 1px solid var(--border-color);
-            margin-bottom: 12px;
-        }
-
+        .chat-box { height: 200px; background: rgba(0, 0, 0, 0.3); border-radius: 10px; padding: 10px; overflow-y: auto; font-size: 13px; color: #e5e5ea; border: 1px solid var(--border-color); margin-bottom: 12px; }
         .chat-box::-webkit-scrollbar { width: 3px; }
         .chat-box::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 3px; }
+        .chat-message { margin-bottom: 10px; line-height: 1.4; word-break: break-word; }
+        .chat-message span.author { color: var(--gold); font-weight: 600; margin-right: 5px; }
 
-        .chat-message {
-            margin-bottom: 10px;
-            line-height: 1.4;
-            word-break: break-word;
-        }
-
-        .chat-message span.author {
-            color: var(--gold);
-            font-weight: 600;
-            margin-right: 5px;
-        }
-
-        .chat-form {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-            width: 100%;
-        }
-
+        .chat-form { display: flex; gap: 6px; align-items: center; width: 100%; }
         .chat-input {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--border-color);
-            padding: 12px 10px;
-            border-radius: 10px;
-            color: #fff;
-            font-size: 13px;
-            outline: none;
-            font-family: 'Montserrat', sans-serif;
-            box-sizing: border-box;
+            background: rgba(0, 0, 0, 0.5); border: 1px solid var(--border-color); padding: 12px 10px;
+            border-radius: 10px; color: #fff; font-size: 13px; outline: none; font-family: 'Montserrat', sans-serif; box-sizing: border-box;
         }
+        .chat-input:focus { border-color: var(--gold); }
+        #usernameInput { width: 28%; flex-shrink: 0; }
+        #messageInput { width: 58%; flex-grow: 1; }
+        .btn-send { background: var(--text-main); color: #000; border: none; width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
 
-        .chat-input:focus {
-            border-color: var(--gold);
-        }
+        .footer-credits { text-align: center; font-size: 11px; color: var(--text-muted); letter-spacing: 0.5px; padding-bottom: 10px; }
+        .footer-credits span { color: var(--gold); font-weight: 500; }
 
-        #usernameInput {
-            width: 28%;
-            flex-shrink: 0;
-        }
-
-        #messageInput {
-            width: 58%;
-            flex-grow: 1;
-        }
-
-        .btn-send {
-            background: var(--text-main);
-            color: #000;
-            border: none;
-            width: 42px;
-            height: 42px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-
-        /* Футер */
-        .footer-credits {
-            text-align: center;
-            font-size: 11px;
-            color: var(--text-muted);
-            letter-spacing: 0.5px;
-            padding-bottom: 10px;
-        }
-
-        .footer-credits span {
-            color: var(--gold);
-            font-weight: 500;
-        }
-
-        .error-screen {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            text-align: center;
-            padding: 20px;
-        }
-        
+        .error-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; padding: 20px; }
         .error-icon { font-size: 42px; margin-bottom: 15px; }
         .error-screen h2 { font-size: 20px; margin-bottom: 10px; color: #ff453a; }
         .error-screen p { color: var(--text-muted); font-size: 13px; line-height: 1.5; }
@@ -347,15 +121,12 @@
         <div class="video-wrapper">
             <div class="video-container" id="videoBox">
                 <iframe id="ytIframe" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                
                 <div class="click-shield" id="clickShield"></div>
-                
                 <div class="play-overlay" id="playOverlay" style="display: flex; opacity: 1;">
                     <button class="play-btn" onclick="startStream()">Подключиться к эфиру</button>
                     <p style="margin-top: 14px; color: rgba(255,255,255,0.5); font-size: 9px; text-transform: uppercase; letter-spacing: 1px;">Нажмите для синхронизации потока</p>
                 </div>
             </div>
-
             <div class="custom-controls">
                 <button class="action-btn" id="fsBtn" onclick="toggleFullScreen()" style="display: none;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
@@ -364,7 +135,6 @@
             </div>
         </div>
 
-        <!-- Красивое инфо-уведомление о синхронизации с Telegram -->
         <div class="tg-sync-info">
             <div class="tg-icon">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27 0-.12.05-1.98 1.26-5.58 3.7-$.53.36-1.01.54-1.44.53-.47-.02-1.37-.26-2.03-.48-.82-.27-1.47-.42-1.42-.88.03-.25.38-.51 1.05-.78 4.11-1.79 6.85-2.97 8.22-3.54 3.91-1.63 4.72-1.91 5.25-1.92.12 0 .39.03.56.17.14.12.18.28.2.45-.02.07-.02.13-.04.2z"/></svg>
@@ -380,17 +150,12 @@
                     <span>Онлайн</span>
                 </div>
             </div>
-            
             <div class="chat-box" id="chatMessages"></div>
-            
             <div class="chat-form">
                 <input type="text" id="usernameInput" class="chat-input" placeholder="Имя" />
                 <input type="text" id="messageInput" class="chat-input" placeholder="Сообщение..." onkeydown="checkEnter(event)" />
                 <button class="btn-send" onclick="sendMessage()" title="Отправить">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="22" y1="2" x2="11" y2="13"></line>
-                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                    </svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
                 </button>
             </div>
         </div>
@@ -407,9 +172,8 @@
     </div>
 
     <script>
-        const VIDEO_ID = "nesG1PTQrK0"; // Актуальный ID трансляции
+        let VIDEO_ID = "nesG1PTQrK0"; // Переменная теперь обновляется динамически
         const SERVER_URL = "https://stream-sxnh.onrender.com";
-        
         let isAuth = false;
 
         window.onload = async function() {
@@ -436,6 +200,15 @@
                     isAuth = true;
                     document.getElementById('content').style.display = 'block';
                     
+                    // Запрашиваем актуальный ID видео у бота
+                    try {
+                        let vidResp = await fetch(`${SERVER_URL}/api/video-id`);
+                        let vidData = await vidResp.json();
+                        if (vidData.video_id) VIDEO_ID = vidData.video_id;
+                    } catch(e) {
+                        console.error("Не удалось получить ID видео, используем стандартный.");
+                    }
+
                     document.getElementById('ytIframe').src = `https://www.youtube.com/embed/${VIDEO_ID}?autoplay=0&controls=0&disablekb=1&modestbranding=1&rel=0&playsinline=1`;
 
                     fetchMessages();
@@ -454,9 +227,7 @@
 
             const overlay = document.getElementById('playOverlay');
             overlay.style.opacity = '0';
-            setTimeout(() => {
-                overlay.style.display = 'none';
-            }, 400);
+            setTimeout(() => { overlay.style.display = 'none'; }, 400);
 
             document.getElementById('fsBtn').style.display = 'flex';
         }
@@ -480,7 +251,6 @@
             let text = messageInput.value.trim();
 
             if (!text) return;
-
             localStorage.setItem('chat_username', name);
 
             try {
@@ -511,17 +281,12 @@
                 if (chatMessages.innerHTML !== htmlContent) {
                     let isScrolledToBottom = chatMessages.scrollHeight - chatMessages.clientHeight <= chatMessages.scrollTop + 30;
                     chatMessages.innerHTML = htmlContent;
-                    if (isScrolledToBottom) {
-                        chatMessages.scrollTop = chatMessages.scrollHeight;
-                    }
+                    if (isScrolledToBottom) { chatMessages.scrollTop = chatMessages.scrollHeight; }
                 }
             } catch (e) {}
         }
 
-        function checkEnter(e) {
-            if (e.key === 'Enter') sendMessage();
-        }
-
+        function checkEnter(e) { if (e.key === 'Enter') sendMessage(); }
         function escapeHtml(text) {
             if (!text) return '';
             return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
