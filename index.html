@@ -69,7 +69,7 @@
             padding: 8px;
             backdrop-filter: blur(20px);
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            margin-bottom: 20px;
+            margin-bottom: 12px;
         }
 
         .video-container {
@@ -162,6 +162,34 @@
             font-family: 'Montserrat', sans-serif;
         }
 
+        /* Инфо-блок синхронизации с Telegram */
+        .tg-sync-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            font-size: 11px;
+            color: var(--text-muted);
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        .tg-sync-info span {
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .tg-icon {
+            color: #229ed9;
+            display: flex;
+            align-items: center;
+        }
+
         /* Чат */
         .chat-section {
             background: var(--card-bg);
@@ -169,6 +197,7 @@
             border-radius: 16px;
             padding: 15px;
             backdrop-filter: blur(20px);
+            margin-bottom: 20px;
         }
 
         .chat-header {
@@ -278,6 +307,20 @@
             flex-shrink: 0;
         }
 
+        /* Футер */
+        .footer-credits {
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+            padding-bottom: 10px;
+        }
+
+        .footer-credits span {
+            color: var(--gold);
+            font-weight: 500;
+        }
+
         .error-screen {
             display: flex;
             flex-direction: column;
@@ -297,19 +340,16 @@
 
     <div id="content" class="container" style="display: none;">
         <div class="header">
-            <h1>VIP GRAFBALAS</h1>
+            <h1>💎 VIP GRAFBALAS</h1>
             <div class="subtitle">Закрытая трансляция</div>
         </div>
         
         <div class="video-wrapper">
             <div class="video-container" id="videoBox">
-                <!-- Плеер через iframe (без тяжелых API) -->
                 <iframe id="ytIframe" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 
-                <!-- Защитный слой поверх плеера -->
                 <div class="click-shield" id="clickShield"></div>
                 
-                <!-- Золотая кнопка подключения -->
                 <div class="play-overlay" id="playOverlay" style="display: flex; opacity: 1;">
                     <button class="play-btn" onclick="startStream()">Подключиться к эфиру</button>
                     <p style="margin-top: 14px; color: rgba(255,255,255,0.5); font-size: 9px; text-transform: uppercase; letter-spacing: 1px;">Нажмите для синхронизации потока</p>
@@ -324,12 +364,20 @@
             </div>
         </div>
 
+        <!-- Красивое инфо-уведомление о синхронизации с Telegram -->
+        <div class="tg-sync-info">
+            <div class="tg-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27 0-.12.05-1.98 1.26-5.58 3.7-$.53.36-1.01.54-1.44.53-.47-.02-1.37-.26-2.03-.48-.82-.27-1.47-.42-1.42-.88.03-.25.38-.51 1.05-.78 4.11-1.79 6.85-2.97 8.22-3.54 3.91-1.63 4.72-1.91 5.25-1.92.12 0 .39.03.56.17.14.12.18.28.2.45-.02.07-.02.13-.04.2z"/></svg>
+            </div>
+            <div>Синхронизировано с Telegram. Сообщения здесь и в секретном временном чате отображаются в реальном времени.</div>
+        </div>
+
         <div class="chat-section">
             <div class="chat-header">
                 <h3>💬 Live Чат</h3>
                 <div class="online-indicator">
                     <div class="dot"></div>
-                    <span>Синхронизировано</span>
+                    <span>Онлайн</span>
                 </div>
             </div>
             
@@ -345,6 +393,10 @@
                     </svg>
                 </button>
             </div>
+        </div>
+
+        <div class="footer-credits">
+            Все права защищены. Разработчик © <span>naomi</span>
         </div>
     </div>
 
@@ -384,7 +436,6 @@
                     isAuth = true;
                     document.getElementById('content').style.display = 'block';
                     
-                    // Загружаем видео в iframe (без автозапуска изначально)
                     document.getElementById('ytIframe').src = `https://www.youtube.com/embed/${VIDEO_ID}?autoplay=0&controls=0&disablekb=1&modestbranding=1&rel=0&playsinline=1`;
 
                     fetchMessages();
@@ -398,18 +449,15 @@
         };
 
         function startStream() {
-            // Мгновенный запуск через автоплей в iframe по клику
             const iframe = document.getElementById('ytIframe');
             iframe.src = `https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1&controls=0&disablekb=1&modestbranding=1&rel=0&playsinline=1`;
 
-            // Плавное скрытие золотой кнопки
             const overlay = document.getElementById('playOverlay');
             overlay.style.opacity = '0';
             setTimeout(() => {
                 overlay.style.display = 'none';
             }, 400);
 
-            // Показываем кнопку полноэкранного режима
             document.getElementById('fsBtn').style.display = 'flex';
         }
 
