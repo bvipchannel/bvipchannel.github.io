@@ -90,7 +90,6 @@
             border: 0;
         }
 
-        /* Та самая красивая золотая кнопка */
         .play-overlay {
             position: absolute;
             top: 0;
@@ -292,7 +291,6 @@
         
         <div class="video-wrapper">
             <div class="video-container" id="videoBox">
-                <!-- Сюда динамически вставится видео при клике -->
                 <div id="playerContainer"></div>
                 
                 <div class="play-overlay" id="playOverlay">
@@ -362,10 +360,10 @@
             }
         };
 
-        // Мгновенный запуск через вставку iframe по клику
         function startStream() {
             const container = document.getElementById('playerContainer');
-            container.innerHTML = `<iframe src="https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1&controls=0&modestbranding=1&rel=0" allow="autoplay"></iframe>`;
+            // Добавлены права allow для корректного запуска плеера YouTube
+            container.innerHTML = `<iframe src="https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1&controls=0&modestbranding=1&rel=0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
             
             const overlay = document.getElementById('playOverlay');
             overlay.style.opacity = '0';
