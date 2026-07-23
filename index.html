@@ -303,13 +303,13 @@
         
         <div class="video-wrapper">
             <div class="video-container" id="videoBox">
-                <!-- Плеер YouTube -->
-                <div id="playerContainer"></div>
+                <!-- Плеер через iframe (без тяжелых API) -->
+                <iframe id="ytIframe" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 
                 <!-- Защитный слой поверх плеера -->
                 <div class="click-shield" id="clickShield"></div>
                 
-                <!-- Золотая кнопка подключения всегда на месте при входе -->
+                <!-- Золотая кнопка подключения -->
                 <div class="play-overlay" id="playOverlay" style="display: flex; opacity: 1;">
                     <button class="play-btn" onclick="startStream()">Подключиться к эфиру</button>
                     <p style="margin-top: 14px; color: rgba(255,255,255,0.5); font-size: 9px; text-transform: uppercase; letter-spacing: 1px;">Нажмите для синхронизации потока</p>
@@ -359,7 +359,6 @@
         const SERVER_URL = "https://stream-sxnh.onrender.com";
         
         let isAuth = false;
-        let player;
 
         window.onload = async function() {
             const savedName = localStorage.getItem('chat_username');
@@ -384,6 +383,10 @@
                 if (data.valid) {
                     isAuth = true;
                     document.getElementById('content').style.display = 'block';
+                    
+                    // Загружаем видео в iframe (без автозапуска изначально)
+                    document.getElementById('ytIframe').src = `https://www.youtube.com/embed/${VIDEO_ID}?autoplay=0&controls=0&disablekb=1&modestbranding=1&rel=0&playsinline=1`;
+
                     fetchMessages();
                     setInterval(fetchMessages, 3000);
                 } else {
@@ -392,42 +395,14 @@
             } catch (e) {
                 document.getElementById('error').style.display = 'flex';
             }
-
-            // Подгружаем YouTube API
-            const tag = document.createElement('script');
-            tag.src = "https://www.youtube.com/iframe_api";
-            const firstScriptTag = document.getElementsByTagName('script')[0];
-            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
         };
 
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('playerContainer', {
-                height: '100%',
-                width: '100%',
-                videoId: VIDEO_ID,
-                playerVars: {
-                    'playsinline': 1,
-                    'controls': 0,
-                    'disablekb': 1,
-                    'iv_load_policy': 3,
-                    'modestbranding': 1,
-                    'rel': 0,
-                    'autoplay': 0
-                }
-            });
-        }
-
         function startStream() {
-            // Принудительно запускаем видео через официальный API плеера
-            if (player && typeof player.playVideo === 'function') {
-                player.playVideo();
-            } else {
-                // Запасной вариант, если API еще не прогрузился
-                const container = document.getElementById('playerContainer');
-                container.innerHTML = `<iframe src="https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1&controls=0&disablekb=1&modestbranding=1&rel=0&playsinline=1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;"></iframe>`;
-            }
-            
-            // Плавное скрытие золотой кнопки по клику
+            // Мгновенный запуск через автоплей в iframe по клику
+            const iframe = document.getElementById('ytIframe');
+            iframe.src = `https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1&controls=0&disablekb=1&modestbranding=1&rel=0&playsinline=1`;
+
+            // Плавное скрытие золотой кнопки
             const overlay = document.getElementById('playOverlay');
             overlay.style.opacity = '0';
             setTimeout(() => {
