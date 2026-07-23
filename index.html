@@ -361,19 +361,35 @@
         let isAuth = false;
         let player;
 
-        window.onload = function() {
+                window.onload = async function() {
             const savedName = localStorage.getItem('chat_username');
             if (savedName) document.getElementById('usernameInput').value = savedName;
 
             const urlParams = new URLSearchParams(window.location.search);
             const token = urlParams.get('token'); 
 
-            if (token && token.trim() !== "") {
-                isAuth = true;
-                document.getElementById('content').style.display = 'block';
-                fetchMessages();
-                setInterval(fetchMessages, 3000);
-            } else {
+            if (!token || token.trim() === "") {
+                document.getElementById('error').style.display = 'flex';
+                return;
+            }
+
+            try {
+                let response = await fetch(`${SERVER_URL}/api/check-token`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ token: token })
+                });
+                let data = await response.json();
+
+                if (data.valid) {
+                    isAuth = true;
+                    document.getElementById('content').style.display = 'block';
+                    fetchMessages();
+                    setInterval(fetchMessages, 3000);
+                } else {
+                    document.getElementById('error').style.display = 'flex';
+                }
+            } catch (e) {
                 document.getElementById('error').style.display = 'flex';
             }
 
@@ -383,6 +399,7 @@
             const firstScriptTag = document.getElementsByTagName('script')[0];
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
         };
+
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('playerContainer', {
