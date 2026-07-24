@@ -383,29 +383,23 @@
             const iframe = document.getElementById('ytIframe');
             iframe.src = `https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1&controls=0&disablekb=1&modestbranding=1&rel=0&playsinline=1`;
         }
-
-        function toggleFullScreen() {
-    const iframe = document.getElementById('ytIframe');
-    const elem = document.getElementById('videoBox');
-    const target = iframe || elem;
-
-    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-        if (target.requestFullscreen) {
-            target.requestFullscreen().catch(err => {
-                console.log("Fullscreen error:", err);
-                if (elem.requestFullscreen) elem.requestFullscreen();
-            });
-        } else if (target.webkitRequestFullscreen) {
-            target.webkitRequestFullscreen();
+                 function toggleFullScreen() {
+            const elem = document.getElementById('videoBox');
+            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                if (elem.requestFullscreen) {
+                    elem.requestFullscreen();
+                } else if (elem.webkitRequestFullscreen) {
+                    elem.webkitRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                }
+            }
         }
-    } else {
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) {
-            document.webkitExitFullscreen();
-        }
-    }
-}
+
 
 
         async function sendMessage() {
