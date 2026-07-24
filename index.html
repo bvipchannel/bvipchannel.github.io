@@ -232,6 +232,7 @@
         let verifiedFullName = "Резидент"; 
         let failedFetchesCount = 0;
         let userHasScrolledUp = false;
+        let lastProcessedMsgCount = 0;
 
         window.onload = async function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -342,15 +343,26 @@
                 // Пример динамического счета онлайн (основан на количестве уникальных авторов сообщений или симуляции живого числа)
                 let uniqueAuthors = new Set();
 
+                                if (data.messages.length > lastProcessedMsgCount && lastProcessedMsgCount > 0) {
+                    for (let i = lastProcessedMsgCount; i < data.messages.length; i++) {
+                        let m = data.messages[i];
+                        if (m.text && m.text.startsWith('[РЕАКЦИЯ:') && m.name !== verifiedFullName) {
+                            let emoji = m.text.replace('[РЕАКЦИЯ:', '').replace(']', '').trim();
+                            spawnFlyingEmoji(emoji);
+                        }
+                    }
+                }
+                lastProcessedMsgCount = data.messages.length;
+                
                 data.messages.forEach(msg => {
                     uniqueAuthors.add(msg.name);
                     let authorStyle = msg.name === "Система" ? "color: #32d74b;" : "color: var(--gold);";
                     htmlContent += `<div class="chat-message"><span class="author" style="${authorStyle}">[${escapeHtml(msg.name)}]:</span> ${escapeHtml(msg.text)}</div>`;
                 });
 
-                 // Динамическое отображение счетчика зрителей (минимум 1, масштабируется от активности)
-                document.getElementById('viewersCount').innerText = Math.max(1, uniqueAuthors.size * 3 + Math.floor(Math.random() * 3));
-                
+                                 // Считаем реальных уникальных людей за последнее время
+                document.getElementById('viewersCount').innerText = Math.max(1, uniqueAuthors.size);
+
                 // Проверка: если в чате от системного имени пришло сообщение о завершении или выключился стрим (можно отслеживать по логике)
                 // Если бот /admin выключил трансляцию, можно также управлять экраном конца эфира. 
                 // Для теста показываем плашку, если видео id пустой или пришло системное завершение.
@@ -411,7 +423,38 @@
                 document.getElementById('scrollDownBtn').classList.remove('visible');
             }
         }
+        // --- ЛЕТАЮЩИЕ РЕАКЦИИ ---
+        async function sendReaction(emoji) {
+            spawnFlyingEmoji(emoji);
+            try {
+                await fetch(`${SERVER_URL}/api/send`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: verifiedFullName, text: `[РЕАКЦИЯ:${emoji}]` })
+                });
+            } catch (error) {
+                console.error("Ошибка отправки реакции:", error);
+            }
+        }
 
+        function spawnFlyingEmoji(emoji) {
+            const container = document.getElementById('floatingReactions');
+            if (!container) return;
+
+            const el = document.createElement('div');
+            el.className = 'flying-emoji';
+            el.innerText = emoji;
+            
+            const randomX = Math.floor(Math.random() * 60) - 20;
+            el.style.right = (20 + randomX) + 'px';
+
+            container.appendChild(el);
+
+            setTimeout(() => {
+                el.remove();
+            }, 2500);
+        }
+        
         function checkEnter(e) { if (e.key === 'Enter') sendMessage(); }
         function escapeHtml(text) {
             if (!text) return '';
