@@ -160,10 +160,19 @@
                     <p style="margin-top: 14px; color: rgba(255,255,255,0.5); font-size: 9px; text-transform: uppercase; letter-spacing: 1px;">Нажмите для синхронизации потока</p>
                 </div>
             </div>
-            <div class="custom-controls">
+                    <div class="custom-controls">
+            <!-- Панель реакций -->
+            <div class="reactions-bar">
+                <button class="reaction-btn" onclick="sendReaction('❤️')" title="Сердце">❤️</button>
+                <button class="reaction-btn" onclick="sendReaction('🔥')" title="Огонь">🔥</button>
+                <button class="reaction-btn" onclick="sendReaction('👏')" title="Аплодисменты">👏</button>
+                <button class="reaction-btn" onclick="sendReaction('💎')" title="Бриллиант">💎</button>
+            </div>
+            
+            <div class="action-btns-group">
                 <button class="action-btn" id="reloadStreamBtn" onclick="reloadStream()" style="display: none;" title="Перезагрузить поток если зависло">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.73-5.73"/></svg>
-                    Обновить поток
+                    Обновить
                 </button>
                 <button class="action-btn" id="fsBtn" onclick="toggleFullScreen()" style="display: none;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
