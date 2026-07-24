@@ -363,4 +363,47 @@
         function handleChatScroll() {
             const chatBox = document.getElementById('chatMessages');
             let positionFromBottom = chatBox.scrollHeight - chatBox.scrollTop - chatBox.clientHeight;
-            // Если пользовател
+            // Если пользователь открутил вверх больше чем на 40 пикселей
+            if (positionFromBottom > 40) {
+                userHasScrolledUp = true;
+                document.getElementById('scrollDownBtn').classList.add('visible');
+            } else {
+                userHasScrolledUp = false;
+                document.getElementById('scrollDownBtn').classList.remove('visible');
+            }
+        }
+
+        function scrollToBottom(forced = false) {
+            const chatBox = document.getElementById('chatMessages');
+            chatBox.scrollTop = chatBox.scrollHeight;
+            userHasScrolledUp = false;
+            document.getElementById('scrollDownBtn').classList.remove('visible');
+        }
+
+        function checkScrollPosition() {
+            const chatBox = document.getElementById('chatMessages');
+            let positionFromBottom = chatBox.scrollHeight - chatBox.scrollTop - chatBox.clientHeight;
+            if (positionFromBottom <= 40) {
+                userHasScrolledUp = false;
+                document.getElementById('scrollDownBtn').classList.remove('visible');
+            }
+        }
+
+        function checkEnter(e) { if (e.key === 'Enter') sendMessage(); }
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        }
+
+        // --- ЗАЩИТА ОТ КОПИРОВАНИЯ И КОНСОЛИ ---
+        document.addEventListener('contextmenu', event => event.preventDefault()); 
+        document.onkeydown = function(e) {
+            if (e.keyCode == 123) return false; 
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false; 
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) return false; 
+            if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false; 
+            if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; 
+        };
+    </script>
+</body>
+</html>
