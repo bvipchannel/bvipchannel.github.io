@@ -56,7 +56,8 @@
             cursor: pointer; text-transform: uppercase; font-family: 'Montserrat', sans-serif; transition: transform 0.2s ease;
         }
         .play-btn:active { transform: scale(0.95); }
-        .custom-controls { display: flex; justify-content: flex-end; margin-top: 10px; padding: 0 5px; }
+        
+        .custom-controls { display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px; padding: 0 5px; }
 
         .action-btn {
             background: rgba(255, 255, 255, 0.05); color: var(--text-main); border: 1px solid var(--border-color);
@@ -85,13 +86,26 @@
         }
 
         .online-indicator { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-muted); }
-        .dot { width: 6px; height: 6px; background-color: #32d74b; border-radius: 50%; box-shadow: 0 0 8px #32d74b; }
+        .dot { width: 6px; height: 6px; background-color: #32d74b; border-radius: 50%; box-shadow: 0 0 8px #32d74b; transition: background-color 0.3s, box-shadow 0.3s; }
+        .dot.offline { background-color: #ff453a; box-shadow: 0 0 8px #ff453a; }
+        .dot.reconnecting { background-color: #ff9f0a; box-shadow: 0 0 8px #ff9f0a; }
 
-        .chat-box { height: 220px; background: rgba(0, 0, 0, 0.4); border-radius: 10px; padding: 12px; overflow-y: auto; font-size: 13px; color: #e5e5ea; border: 1px solid var(--border-color); margin-bottom: 12px; }
+        .chat-box-wrapper { position: relative; margin-bottom: 12px; }
+        .chat-box { height: 220px; background: rgba(0, 0, 0, 0.4); border-radius: 10px; padding: 12px; overflow-y: auto; font-size: 13px; color: #e5e5ea; border: 1px solid var(--border-color); }
         .chat-box::-webkit-scrollbar { width: 4px; }
         .chat-box::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 3px; }
         .chat-message { margin-bottom: 10px; line-height: 1.4; word-break: break-word; }
         .chat-message span.author { color: var(--gold); font-weight: 600; margin-right: 5px; }
+
+        /* Плавающая кнопка прокрутки вниз */
+        .scroll-down-btn {
+            position: absolute; bottom: 10px; right: 15px; background: var(--gold); color: #000;
+            border: none; width: 30px; height: 30px; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; cursor: pointer; opacity: 0;
+            transition: opacity 0.3s, transform 0.2s; pointer-events: none; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        .scroll-down-btn.visible { opacity: 1; pointer-events: auto; }
+        .scroll-down-btn:active { transform: scale(0.9); }
 
         .chat-form { display: flex; gap: 8px; align-items: center; width: 100%; }
         .chat-input {
@@ -136,6 +150,10 @@
                 </div>
             </div>
             <div class="custom-controls">
+                <button class="action-btn" id="reloadStreamBtn" onclick="reloadStream()" style="display: none;" title="Перезагрузить поток если зависло">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.73-5.73"/></svg>
+                    Обновить поток
+                </button>
                 <button class="action-btn" id="fsBtn" onclick="toggleFullScreen()" style="display: none;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
                     На весь экран
@@ -154,19 +172,23 @@
             <div class="chat-header">
                 <div style="display: flex; align-items: center; gap: 12px;">
                     <h3>💬 Live Чат</h3>
-                    <!-- Сюда автоматически подтянется имя и фамилия из Telegram -->
                     <div class="user-badge" id="userBadge">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                         <span id="userNameDisplay">Загрузка...</span>
                     </div>
                 </div>
                 <div class="online-indicator">
-                    <div class="dot"></div>
-                    <span>Онлайн</span>
+                    <div class="dot" id="connectionDot"></div>
+                    <span id="connectionText">Онлайн</span>
                 </div>
             </div>
             
-            <div class="chat-box" id="chatMessages"></div>
+            <div class="chat-box-wrapper">
+                <div class="chat-box" id="chatMessages" onscroll="handleChatScroll()"></div>
+                <button class="scroll-down-btn" id="scrollDownBtn" onclick="scrollToBottom(true)" title="К новым сообщениям">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
+            </div>
             
             <div class="chat-form">
                 <input type="text" id="messageInput" class="chat-input" placeholder="Введите сообщение..." onkeydown="checkEnter(event)" />
@@ -191,7 +213,10 @@
         let VIDEO_ID = "nesG1PTQrK0"; 
         const SERVER_URL = "https://stream-sxnh.onrender.com";
         let isAuth = false;
-        let verifiedFullName = "Резидент"; // Переменная для хранения реального имени из Telegram
+        let verifiedFullName = "Резидент"; 
+        let failedFetchesCount = 0;
+        let userHasScrolledUp = false;
+        let isStreamPlaying = false;
 
         window.onload = async function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -213,7 +238,6 @@
                 if (data.valid) {
                     isAuth = true;
                     
-                    // Сохраняем имя и фамилию, пришедшие из бота Telegram
                     if (data.name) {
                         verifiedFullName = data.name;
                         document.getElementById('userNameDisplay').innerText = verifiedFullName;
@@ -242,6 +266,7 @@
         };
 
         function startStream() {
+            isStreamPlaying = true;
             const iframe = document.getElementById('ytIframe');
             iframe.src = `https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1&controls=0&disablekb=1&modestbranding=1&rel=0&playsinline=1`;
 
@@ -250,6 +275,13 @@
             setTimeout(() => { overlay.style.display = 'none'; }, 400);
 
             document.getElementById('fsBtn').style.display = 'flex';
+            document.getElementById('reloadStreamBtn').style.display = 'flex';
+        }
+
+        // Кнопка принудительного обновления плеера
+        function reloadStream() {
+            const iframe = document.getElementById('ytIframe');
+            iframe.src = `https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1&controls=0&disablekb=1&modestbranding=1&rel=0&playsinline=1`;
         }
 
         function toggleFullScreen() {
@@ -270,13 +302,13 @@
             if (!text) return;
 
             try {
-                // Отправляем сообщение на сервер под верифицированным именем из Telegram
                 await fetch(`${SERVER_URL}/api/send`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name: verifiedFullName, text: text })
                 });
                 messageInput.value = '';
+                scrollToBottom(true);
                 fetchMessages(); 
             } catch (error) {
                 console.error("Ошибка сети:", error);
@@ -287,8 +319,12 @@
             try {
                 let response = await fetch(`${SERVER_URL}/api/messages`);
                 let data = await response.json();
-                const chatMessages = document.getElementById('chatMessages');
                 
+                // Успешный запрос — сбрасываем счетчик ошибок и ставим зеленый статус
+                failedFetchesCount = 0;
+                setConnectionStatus('online');
+
+                const chatMessages = document.getElementById('chatMessages');
                 let htmlContent = '';
                 data.messages.forEach(msg => {
                     let authorStyle = msg.name === "Система" ? "color: #32d74b;" : "color: var(--gold);";
@@ -296,28 +332,35 @@
                 });
                 
                 if (chatMessages.innerHTML !== htmlContent) {
-                    let isScrolledToBottom = chatMessages.scrollHeight - chatMessages.clientHeight <= chatMessages.scrollTop + 30;
                     chatMessages.innerHTML = htmlContent;
-                    if (isScrolledToBottom) { chatMessages.scrollTop = chatMessages.scrollHeight; }
+                    if (!userHasScrolledUp) {
+                        scrollToBottom(false);
+                    } else {
+                        checkScrollPosition();
+                    }
                 }
-            } catch (e) {}
+            } catch (e) {
+                failedFetchesCount++;
+                if (failedFetchesCount >= 2) {
+                    setConnectionStatus('reconnecting');
+                }
+            }
         }
 
-        function checkEnter(e) { if (e.key === 'Enter') sendMessage(); }
-        function escapeHtml(text) {
-            if (!text) return '';
-            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        function setConnectionStatus(status) {
+            const dot = document.getElementById('connectionDot');
+            const text = document.getElementById('connectionText');
+            
+            dot.className = "dot";
+            if (status === 'online') {
+                text.innerText = "Онлайн";
+            } else if (status === 'reconnecting') {
+                dot.classList.add('reconnecting');
+                text.innerText = "Подключение...";
+            }
         }
 
-        // --- ЗАЩИТА ОТ КОПИРОВАНИЯ И КОНСОЛИ ---
-        document.addEventListener('contextmenu', event => event.preventDefault()); 
-        document.onkeydown = function(e) {
-            if (e.keyCode == 123) return false; 
-            if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false; 
-            if (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) return false; 
-            if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false; 
-            if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; 
-        };
-    </script>
-</body>
-</html>
+        function handleChatScroll() {
+            const chatBox = document.getElementById('chatMessages');
+            let positionFromBottom = chatBox.scrollHeight - chatBox.scrollTop - chatBox.clientHeight;
+            // Если пользовател
