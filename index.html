@@ -132,6 +132,37 @@
         .error-icon { font-size: 42px; margin-bottom: 15px; }
         .error-screen h2 { font-size: 20px; margin-bottom: 10px; color: #ff453a; }
         .error-screen p { color: var(--text-muted); font-size: 13px; line-height: 1.5; }
+                /* Аккуратная панель реакций прямо на видео */
+        .reactions-overlay {
+            position: absolute; bottom: 12px; right: 12px; display: flex; gap: 6px;
+            background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(6px);
+            padding: 4px 6px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 25;
+        }
+        .reaction-btn {
+            background: transparent; border: none; font-size: 18px; cursor: pointer;
+            width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; transition: transform 0.15s, background 0.2s;
+        }
+        .reaction-btn:hover { background: rgba(255, 255, 255, 0.2); transform: scale(1.15); }
+        .reaction-btn:active { transform: scale(0.9); }
+
+        /* Контейнер для летящих иконок */
+        .floating-reactions {
+            position: absolute; bottom: 0; right: 20px; width: 100px; height: 200px;
+            pointer-events: none; overflow: hidden; z-index: 20;
+        }
+        .flying-emoji {
+            position: absolute; bottom: 10px; right: 10px; font-size: 24px;
+            animation: flyUp 2s ease-out forwards; user-select: none;
+        }
+        @keyframes flyUp {
+            0% { transform: translateY(0) scale(0.6); opacity: 0; }
+            20% { opacity: 1; transform: translateY(-30px) scale(1.2); }
+            80% { opacity: 1; transform: translateY(-140px) scale(1); }
+            100% { transform: translateY(-180px) scale(0.7); opacity: 0; }
+        }
+        
     </style>
 </head>
 <body>
@@ -143,30 +174,33 @@
         </div>
         
         <div class="video-wrapper">
-            <div class="video-container" id="videoBox">
+                        <div class="video-container" id="videoBox">
                 <iframe id="ytIframe" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 <div class="click-shield" id="clickShield"></div>
                 
+                <!-- Летящие эмодзи прямо на видео -->
+                <div class="floating-reactions" id="floatingReactions"></div>
+
+                <!-- Компактные кнопочки в углу видео -->
+                <div class="reactions-overlay">
+                    <button class="reaction-btn" onclick="sendReaction('❤️')" title="Сердце">❤️</button>
+                    <button class="reaction-btn" onclick="sendReaction('🔥')" title="Огонь">🔥</button>
+                    <button class="reaction-btn" onclick="sendReaction('👏')" title="Аплодисменты">👏</button>
+                    <button class="reaction-btn" onclick="sendReaction('💎')" title="Бриллиант">💎</button>
+                </div>
+
                 <!-- Экран окончания эфира -->
                 <div class="ended-overlay" id="endedOverlay" style="display: none;">
                     <div style="font-size: 36px; margin-bottom: 10px;">✨</div>
-                    <h3 style="color: var(--gold); margin: 0 0 10px 0; font-size: 16px; letter-spacing: 1px; text-transform: uppercase;">Стрим завершён</h3>
-                    <p style="color: var(--text-muted); font-size: 12px; max-width: 320px; line-height: 1.5; margin: 0;">Спасибо, что были с нами! Встретимся в VIP GRAFBALAS ❤️</p>
+                    <h3 style="color: var(--gold); margin: 0 0 10px 0; font-size: 16px;">Трансляция завершена</h3>
+                    <p style="color: var(--text-muted); font-size: 12px; max-width: 320px; margin: 0 auto;">Спасибо, что были с нами! Запись эфира обрабатывается.</p>
                 </div>
 
                 <!-- Стартовая кнопка -->
-                <div class="play-overlay" id="playOverlay" style="display: flex; opacity: 1;">
+                <div class="play-overlay" id="playOverlay" style="display: flex;">
                     <button class="play-btn" onclick="startStream()">Подключиться к эфиру</button>
-                    <p style="margin-top: 14px; color: rgba(255,255,255,0.5); font-size: 9px; text-transform: uppercase; letter-spacing: 1px;">Нажмите для синхронизации потока</p>
+                    <p style="margin-top: 14px; color: rgba(255,255,255,0.5); font-size: 9px;">Нажмите для запуска трансляции</p>
                 </div>
-            </div>
-                    <div class="custom-controls">
-            <!-- Панель реакций -->
-            <div class="reactions-bar">
-                <button class="reaction-btn" onclick="sendReaction('❤️')" title="Сердце">❤️</button>
-                <button class="reaction-btn" onclick="sendReaction('🔥')" title="Огонь">🔥</button>
-                <button class="reaction-btn" onclick="sendReaction('👏')" title="Аплодисменты">👏</button>
-                <button class="reaction-btn" onclick="sendReaction('💎')" title="Бриллиант">💎</button>
             </div>
             
             <div class="action-btns-group">
@@ -363,11 +397,14 @@
                 }
                 lastProcessedMsgCount = data.messages.length;
                 
-                data.messages.forEach(msg => {
-                    uniqueAuthors.add(msg.name);
-                    let authorStyle = msg.name === "Система" ? "color: #32d74b;" : "color: var(--gold);";
-                    htmlContent += `<div class="chat-message"><span class="author" style="${authorStyle}">[${escapeHtml(msg.name)}]:</span> ${escapeHtml(msg.text)}</div>`;
-                });
+                    data.messages.forEach(msg => {
+        // Прячем служебные реакции от чата
+        if (msg.text && msg.text.startsWith('[РЕАКЦИЯ:')) return;
+
+        uniqueAuthors.add(msg.name);
+        let authorStyle = msg.name === "Система" ? "color: #32d74b;" : "color: var(--gold);";
+        htmlContent += `<div class="chat-message"><span class="author" style="${authorStyle}">${escapeHtml(msg.name)}:</span> ${escapeHtml(msg.text)}</div>`;
+    });
 
                                  // Считаем реальных уникальных людей за последнее время
                 document.getElementById('viewersCount').innerText = Math.max(1, uniqueAuthors.size);
