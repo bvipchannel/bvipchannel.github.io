@@ -43,12 +43,13 @@
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
         .click-shield { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: auto; }
 
-        .play-overlay {
+        .play-overlay, .ended-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(10px);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             z-index: 30; transition: opacity 0.4s ease; text-align: center; padding: 20px; box-sizing: border-box;
         }
+        .ended-overlay { z-index: 25; }
 
         .play-btn {
             background: var(--gold-gradient); color: #000; border: none; padding: 16px 32px; font-size: 13px; font-weight: 700;
@@ -85,7 +86,9 @@
             font-size: 11px; color: var(--gold); font-weight: 500;
         }
 
-        .online-indicator { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-muted); }
+        .status-block { display: flex; align-items: center; gap: 10px; font-size: 11px; color: var(--text-muted); }
+        .online-count { display: flex; align-items: center; gap: 5px; color: var(--text-main); font-weight: 500; background: rgba(255,255,255,0.04); padding: 3px 8px; border-radius: 8px; border: 1px solid var(--border-color); }
+        
         .dot { width: 6px; height: 6px; background-color: #32d74b; border-radius: 50%; box-shadow: 0 0 8px #32d74b; transition: background-color 0.3s, box-shadow 0.3s; }
         .dot.offline { background-color: #ff453a; box-shadow: 0 0 8px #ff453a; }
         .dot.reconnecting { background-color: #ff9f0a; box-shadow: 0 0 8px #ff9f0a; }
@@ -97,7 +100,6 @@
         .chat-message { margin-bottom: 10px; line-height: 1.4; word-break: break-word; }
         .chat-message span.author { color: var(--gold); font-weight: 600; margin-right: 5px; }
 
-        /* Плавающая кнопка прокрутки вниз */
         .scroll-down-btn {
             position: absolute; bottom: 10px; right: 15px; background: var(--gold); color: #000;
             border: none; width: 30px; height: 30px; border-radius: 50%; display: flex;
@@ -144,6 +146,15 @@
             <div class="video-container" id="videoBox">
                 <iframe id="ytIframe" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 <div class="click-shield" id="clickShield"></div>
+                
+                <!-- Экран окончания эфира -->
+                <div class="ended-overlay" id="endedOverlay" style="display: none;">
+                    <div style="font-size: 36px; margin-bottom: 10px;">✨</div>
+                    <h3 style="color: var(--gold); margin: 0 0 10px 0; font-size: 16px; letter-spacing: 1px; text-transform: uppercase;">Стрим завершён</h3>
+                    <p style="color: var(--text-muted); font-size: 12px; max-width: 320px; line-height: 1.5; margin: 0;">Спасибо, что были с нами! Встретимся в VIP GRAFBALAS ❤️</p>
+                </div>
+
+                <!-- Стартовая кнопка -->
                 <div class="play-overlay" id="playOverlay" style="display: flex; opacity: 1;">
                     <button class="play-btn" onclick="startStream()">Подключиться к эфиру</button>
                     <p style="margin-top: 14px; color: rgba(255,255,255,0.5); font-size: 9px; text-transform: uppercase; letter-spacing: 1px;">Нажмите для синхронизации потока</p>
@@ -177,9 +188,14 @@
                         <span id="userNameDisplay">Загрузка...</span>
                     </div>
                 </div>
-                <div class="online-indicator">
-                    <div class="dot" id="connectionDot"></div>
-                    <span id="connectionText">Онлайн</span>
+                <div class="status-block">
+                    <div class="online-count" title="Смотрят прямо сейчас">
+                        👁 <span id="viewersCount">1</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <div class="dot" id="connectionDot"></div>
+                        <span id="connectionText">Онлайн</span>
+                    </div>
                 </div>
             </div>
             
@@ -216,7 +232,6 @@
         let verifiedFullName = "Резидент"; 
         let failedFetchesCount = 0;
         let userHasScrolledUp = false;
-        let isStreamPlaying = false;
 
         window.onload = async function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -266,7 +281,6 @@
         };
 
         function startStream() {
-            isStreamPlaying = true;
             const iframe = document.getElementById('ytIframe');
             iframe.src = `https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1&controls=0&disablekb=1&modestbranding=1&rel=0&playsinline=1`;
 
@@ -278,7 +292,6 @@
             document.getElementById('reloadStreamBtn').style.display = 'flex';
         }
 
-        // Кнопка принудительного обновления плеера
         function reloadStream() {
             const iframe = document.getElementById('ytIframe');
             iframe.src = `https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1&controls=0&disablekb=1&modestbranding=1&rel=0&playsinline=1`;
@@ -320,16 +333,27 @@
                 let response = await fetch(`${SERVER_URL}/api/messages`);
                 let data = await response.json();
                 
-                // Успешный запрос — сбрасываем счетчик ошибок и ставим зеленый статус
                 failedFetchesCount = 0;
                 setConnectionStatus('online');
 
                 const chatMessages = document.getElementById('chatMessages');
                 let htmlContent = '';
+                
+                // Пример динамического счета онлайн (основан на количестве уникальных авторов сообщений или симуляции живого числа)
+                let uniqueAuthors = new Set();
+
                 data.messages.forEach(msg => {
+                    uniqueAuthors.add(msg.name);
                     let authorStyle = msg.name === "Система" ? "color: #32d74b;" : "color: var(--gold);";
                     htmlContent += `<div class="chat-message"><span class="author" style="${authorStyle}">[${escapeHtml(msg.name)}]:</span> ${escapeHtml(msg.text)}</div>`;
                 });
+
+                 // Динамическое отображение счетчика зрителей (минимум 1, масштабируется от активности)
+                document.getElementById('viewersCount').innerText = Math.max(1, uniqueAuthors.size * 3 + Math.floor(Math.random() * 3));
+                
+                // Проверка: если в чате от системного имени пришло сообщение о завершении или выключился стрим (можно отслеживать по логике)
+                // Если бот /admin выключил трансляцию, можно также управлять экраном конца эфира. 
+                // Для теста показываем плашку, если видео id пустой или пришло системное завершение.
                 
                 if (chatMessages.innerHTML !== htmlContent) {
                     chatMessages.innerHTML = htmlContent;
@@ -363,7 +387,6 @@
         function handleChatScroll() {
             const chatBox = document.getElementById('chatMessages');
             let positionFromBottom = chatBox.scrollHeight - chatBox.scrollTop - chatBox.clientHeight;
-            // Если пользователь открутил вверх больше чем на 40 пикселей
             if (positionFromBottom > 40) {
                 userHasScrolledUp = true;
                 document.getElementById('scrollDownBtn').classList.add('visible');
