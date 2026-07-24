@@ -8,8 +8,8 @@
     <style>
         :root {
             --bg-color: #050505;
-            --card-bg: rgba(15, 15, 15, 0.6);
-            --border-color: rgba(255, 255, 255, 0.06);
+            --card-bg: rgba(15, 15, 15, 0.65);
+            --border-color: rgba(255, 255, 255, 0.08);
             --gold: #d4af37;
             --gold-gradient: linear-gradient(135deg, #d4af37 0%, #aa8c2c 100%);
             --text-main: #f5f5f7;
@@ -18,7 +18,7 @@
 
         body {
             margin: 0; background-color: var(--bg-color);
-            background-image: radial-gradient(circle at 15% 50%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
+            background-image: radial-gradient(circle at 15% 50%, rgba(212, 175, 55, 0.04) 0%, transparent 50%),
                               radial-gradient(circle at 85% 30%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
             color: var(--text-main); font-family: 'Montserrat', sans-serif;
             display: flex; flex-direction: column; align-items: center;
@@ -36,7 +36,7 @@
 
         .video-wrapper {
             background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px;
-            padding: 8px; backdrop-filter: blur(20px); box-shadow: 0 20px 50px rgba(0,0,0,0.5); margin-bottom: 12px;
+            padding: 8px; backdrop-filter: blur(20px); box-shadow: 0 20px 50px rgba(0,0,0,0.6); margin-bottom: 12px;
         }
 
         .video-container { position: relative; width: 100%; padding-bottom: 56.25%; background: #000; border-radius: 10px; overflow: hidden; }
@@ -61,7 +61,9 @@
         .action-btn {
             background: rgba(255, 255, 255, 0.05); color: var(--text-main); border: 1px solid var(--border-color);
             padding: 8px 14px; font-size: 11px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 6px; font-family: 'Montserrat', sans-serif;
+            transition: background 0.2s;
         }
+        .action-btn:hover { background: rgba(255, 255, 255, 0.1); }
 
         .tg-sync-info {
             display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--card-bg);
@@ -71,27 +73,41 @@
         .tg-sync-info span { color: var(--text-main); font-weight: 500; }
         .tg-icon { color: #229ed9; display: flex; align-items: center; }
 
-        .chat-section { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 15px; backdrop-filter: blur(20px); margin-bottom: 20px; }
+        /* Секция чата */
+        .chat-section { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 15px; backdrop-filter: blur(20px); margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         .chat-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
         .chat-header h3 { margin: 0; font-size: 13px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+        
+        .user-badge {
+            display: flex; align-items: center; gap: 6px; background: rgba(212, 175, 55, 0.08);
+            border: 1px solid rgba(212, 175, 55, 0.2); padding: 4px 10px; border-radius: 20px;
+            font-size: 11px; color: var(--gold); font-weight: 500;
+        }
+
         .online-indicator { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-muted); }
         .dot { width: 6px; height: 6px; background-color: #32d74b; border-radius: 50%; box-shadow: 0 0 8px #32d74b; }
 
-        .chat-box { height: 200px; background: rgba(0, 0, 0, 0.3); border-radius: 10px; padding: 10px; overflow-y: auto; font-size: 13px; color: #e5e5ea; border: 1px solid var(--border-color); margin-bottom: 12px; }
-        .chat-box::-webkit-scrollbar { width: 3px; }
+        .chat-box { height: 220px; background: rgba(0, 0, 0, 0.4); border-radius: 10px; padding: 12px; overflow-y: auto; font-size: 13px; color: #e5e5ea; border: 1px solid var(--border-color); margin-bottom: 12px; }
+        .chat-box::-webkit-scrollbar { width: 4px; }
         .chat-box::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 3px; }
         .chat-message { margin-bottom: 10px; line-height: 1.4; word-break: break-word; }
         .chat-message span.author { color: var(--gold); font-weight: 600; margin-right: 5px; }
 
-        .chat-form { display: flex; gap: 6px; align-items: center; width: 100%; }
+        .chat-form { display: flex; gap: 8px; align-items: center; width: 100%; }
         .chat-input {
-            background: rgba(0, 0, 0, 0.5); border: 1px solid var(--border-color); padding: 12px 10px;
+            background: rgba(0, 0, 0, 0.5); border: 1px solid var(--border-color); padding: 12px 14px;
             border-radius: 10px; color: #fff; font-size: 13px; outline: none; font-family: 'Montserrat', sans-serif; box-sizing: border-box;
+            flex-grow: 1; transition: border-color 0.2s;
         }
         .chat-input:focus { border-color: var(--gold); }
-        #usernameInput { width: 28%; flex-shrink: 0; }
-        #messageInput { width: 58%; flex-grow: 1; }
-        .btn-send { background: var(--text-main); color: #000; border: none; width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
+        
+        .btn-send {
+            background: var(--gold-gradient); color: #000; border: none; width: 44px; height: 44px;
+            border-radius: 10px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; flex-shrink: 0; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+            transition: transform 0.2s;
+        }
+        .btn-send:active { transform: scale(0.95); }
 
         .footer-credits { text-align: center; font-size: 11px; color: var(--text-muted); letter-spacing: 0.5px; padding-bottom: 10px; }
         .footer-credits span { color: var(--gold); font-weight: 500; }
@@ -136,18 +152,26 @@
 
         <div class="chat-section">
             <div class="chat-header">
-                <h3>💬 Live Чат</h3>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <h3>💬 Live Чат</h3>
+                    <!-- Сюда автоматически подтянется имя и фамилия из Telegram -->
+                    <div class="user-badge" id="userBadge">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        <span id="userNameDisplay">Загрузка...</span>
+                    </div>
+                </div>
                 <div class="online-indicator">
                     <div class="dot"></div>
                     <span>Онлайн</span>
                 </div>
             </div>
+            
             <div class="chat-box" id="chatMessages"></div>
+            
             <div class="chat-form">
-                <input type="text" id="usernameInput" class="chat-input" placeholder="Имя" />
-                <input type="text" id="messageInput" class="chat-input" placeholder="Сообщение..." onkeydown="checkEnter(event)" />
+                <input type="text" id="messageInput" class="chat-input" placeholder="Введите сообщение..." onkeydown="checkEnter(event)" />
                 <button class="btn-send" onclick="sendMessage()" title="Отправить">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
                 </button>
             </div>
         </div>
@@ -167,11 +191,9 @@
         let VIDEO_ID = "nesG1PTQrK0"; 
         const SERVER_URL = "https://stream-sxnh.onrender.com";
         let isAuth = false;
+        let verifiedFullName = "Резидент"; // Переменная для хранения реального имени из Telegram
 
         window.onload = async function() {
-            const savedName = localStorage.getItem('chat_username');
-            if (savedName) document.getElementById('usernameInput').value = savedName;
-
             const urlParams = new URLSearchParams(window.location.search);
             const token = urlParams.get('token'); 
 
@@ -190,6 +212,13 @@
 
                 if (data.valid) {
                     isAuth = true;
+                    
+                    // Сохраняем имя и фамилию, пришедшие из бота Telegram
+                    if (data.name) {
+                        verifiedFullName = data.name;
+                        document.getElementById('userNameDisplay').innerText = verifiedFullName;
+                    }
+
                     document.getElementById('content').style.display = 'block';
                     
                     try {
@@ -235,20 +264,17 @@
         }
 
         async function sendMessage() {
-            const usernameInput = document.getElementById('usernameInput');
             const messageInput = document.getElementById('messageInput');
-
-            let name = usernameInput.value.trim() || "Резидент";
             let text = messageInput.value.trim();
 
             if (!text) return;
-            localStorage.setItem('chat_username', name);
 
             try {
+                // Отправляем сообщение на сервер под верифицированным именем из Telegram
                 await fetch(`${SERVER_URL}/api/send`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name: name, text: text })
+                    body: JSON.stringify({ name: verifiedFullName, text: text })
                 });
                 messageInput.value = '';
                 fetchMessages(); 
