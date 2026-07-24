@@ -385,15 +385,28 @@
         }
 
         function toggleFullScreen() {
-            const elem = document.getElementById('videoBox');
-            if (!document.fullscreenElement) {
+    const iframe = document.getElementById('ytIframe');
+    const elem = document.getElementById('videoBox');
+    const target = iframe || elem;
+
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+        if (target.requestFullscreen) {
+            target.requestFullscreen().catch(err => {
+                console.log("Fullscreen error:", err);
                 if (elem.requestFullscreen) elem.requestFullscreen();
-                else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
-            } else {
-                if (document.exitFullscreen) document.exitFullscreen();
-                else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
-            }
+            });
+        } else if (target.webkitRequestFullscreen) {
+            target.webkitRequestFullscreen();
         }
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        }
+    }
+}
+
 
         async function sendMessage() {
             const messageInput = document.getElementById('messageInput');
