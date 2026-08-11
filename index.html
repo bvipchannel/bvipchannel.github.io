@@ -34,41 +34,33 @@
         }
         .subtitle { color: var(--gold); font-size: 10px; font-weight: 500; letter-spacing: 3px; text-transform: uppercase; }
 
-        /* Размываем только видеобокс, чтобы звук трансляции не останавливался */
-.video-wrapper {
-    background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px;
-    padding: 8px; backdrop-filter: blur(20px); box-shadow: 0 20px 50px rgba(0,0,0,0.6);
-}
+        .video-wrapper {
+            background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px;
+            padding: 8px; backdrop-filter: blur(20px); box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        }
 
-.video-container { 
-    position: relative; width: 100%; padding-bottom: 56.25%; background: #000; border-radius: 10px; overflow: hidden; 
-    transition: filter 0.3s ease;
-}
-.video-container.blurred {
-    filter: blur(25px);
-}
+        .video-container { 
+            position: relative; width: 100%; padding-bottom: 56.25%; background: #000; border-radius: 10px; overflow: hidden; 
+            transition: filter 0.3s ease, opacity 0.3s ease;
+        }
+        /* Смягченный блюр */
+        .video-container.blurred {
+            filter: blur(6px) brightness(0.6);
+        }
 
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        /* Защитный щит всегда активен */
         .click-shield { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: auto; }
 
-        /* Плавающий водяной знак */
         .watermark {
-            position: absolute;
-            color: rgba(255, 255, 255, 0.22);
-            font-size: 13px;
-            font-weight: 700;
-            pointer-events: none;
-            z-index: 20;
-            user-select: none;
-            white-space: nowrap;
-            font-family: 'Montserrat', sans-serif;
-            text-shadow: 0 0 4px rgba(0,0,0,0.8);
+            position: absolute; color: rgba(255, 255, 255, 0.22); font-size: 13px; font-weight: 700;
+            pointer-events: none; z-index: 20; user-select: none; white-space: nowrap; text-shadow: 0 0 4px rgba(0,0,0,0.8);
             transition: top 4s ease-in-out, left 4s ease-in-out;
         }
 
         .play-overlay, .ended-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(5, 5, 5, 0.95); backdrop-filter: blur(10px);
+            background: rgba(5, 5, 5, 0.85); backdrop-filter: blur(5px);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             z-index: 30; transition: opacity 0.4s ease; text-align: center; padding: 20px; box-sizing: border-box;
         }
@@ -81,12 +73,8 @@
         }
         .play-btn:active { transform: scale(0.95); }
         
-        .controls-row {
-            display: flex; gap: 8px; margin-top: 8px; width: 100%; align-items: center;
-        }
-        .action-btns-group {
-            display: flex; gap: 8px; flex-grow: 1;
-        }
+        .controls-row { display: flex; gap: 8px; margin-top: 8px; width: 100%; align-items: center; }
+        .action-btns-group { display: flex; gap: 8px; flex-grow: 1; }
         .action-btn {
             background: var(--card-bg); border: 1px solid var(--border-color); color: #fff;
             padding: 10px 14px; border-radius: 12px; font-size: 13px; font-weight: 500;
@@ -94,56 +82,28 @@
             flex-grow: 1; transition: background 0.2s, border-color 0.2s;
         }
         .action-btn:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--gold); }
+        .btn-warning { color: #ff9f0a; border-color: rgba(255, 159, 10, 0.3); }
 
-        .reaction-wrapper {
-            position: relative; display: inline-block;
-        }
+        .reaction-wrapper { position: relative; display: inline-block; }
         .reaction-toggle-btn {
-            background: var(--card-bg); border: 1px solid var(--border-color); color: #fff;
-            width: 42px; height: 42px; border-radius: 12px; font-size: 18px;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            transition: background 0.2s, border-color 0.2s;
+            background: var(--card-bg); border: 1px solid var(--border-color); color: #fff; width: 42px; height: 42px; border-radius: 12px; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s, border-color 0.2s;
         }
-        .reaction-toggle-btn:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--gold); }
-
         .reaction-popup {
-            position: absolute; bottom: 50px; right: 0; display: none;
-            background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(10px);
-            border: 1px solid var(--border-color); padding: 6px; border-radius: 16px;
-            gap: 4px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); z-index: 30;
-            animation: popUp 0.2s ease-out;
+            position: absolute; bottom: 50px; right: 0; display: none; background: rgba(15, 15, 15, 0.95); backdrop-filter: blur(10px); border: 1px solid var(--border-color); padding: 6px; border-radius: 16px; gap: 4px; box-shadow: 0 8px 24px rgba(0,0,0,0.5); z-index: 30; animation: popUp 0.2s ease-out;
         }
         .reaction-popup.show { display: flex; }
         .popup-btn {
-            background: transparent; border: none; font-size: 20px; cursor: pointer;
-            width: 36px; height: 36px; display: flex; align-items: center; justify-content: center;
-            border-radius: 50%; transition: transform 0.15s, background 0.2s;
+            background: transparent; border: none; font-size: 20px; cursor: pointer; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: transform 0.15s, background 0.2s;
         }
-        .popup-btn:hover { background: rgba(255, 255, 255, 0.15); transform: scale(1.15); }
+        @keyframes popUp { 0% { transform: translateY(10px) scale(0.9); opacity: 0; } 100% { transform: translateY(0) scale(1); opacity: 1; } }
 
-        @keyframes popUp {
-            0% { transform: translateY(10px) scale(0.9); opacity: 0; }
-            100% { transform: translateY(0) scale(1); opacity: 1; }
-        }
-
-        .floating-reactions {
-            position: absolute; bottom: 0; right: 20px; width: 100px; height: 200px;
-            pointer-events: none; overflow: hidden; z-index: 20;
-        }
-        .flying-emoji {
-            position: absolute; bottom: 10px; right: 10px; font-size: 24px;
-            animation: flyUp 2s ease-out forwards; user-select: none;
-        }
-        @keyframes flyUp {
-            0% { transform: translateY(0) scale(0.6); opacity: 0; }
-            20% { opacity: 1; transform: translateY(-30px) scale(1.2); }
-            80% { opacity: 1; transform: translateY(-140px) scale(1); }
-            100% { transform: translateY(-180px) scale(0.7); opacity: 0; }
-        }
+        .floating-reactions { position: absolute; bottom: 0; right: 20px; width: 100px; height: 200px; pointer-events: none; overflow: hidden; z-index: 20; }
+        .flying-emoji { position: absolute; bottom: 10px; right: 10px; font-size: 24px; animation: flyUp 2s ease-out forwards; user-select: none; }
+        @keyframes flyUp { 0% { transform: translateY(0) scale(0.6); opacity: 0; } 20% { opacity: 1; transform: translateY(-30px) scale(1.2); } 80% { opacity: 1; transform: translateY(-140px) scale(1); } 100% { transform: translateY(-180px) scale(0.7); opacity: 0; } }
 
         .tg-sync-info {
             display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--card-bg);
-            border: 1px solid var(--border-color); border-radius: 12px; padding: 10px 15px; margin-bottom: 15px;
+            border: 1px solid var(--border-color); border-radius: 12px; padding: 10px 15px; margin-bottom: 15px; margin-top: 15px;
             font-size: 11px; color: var(--text-muted); backdrop-filter: blur(10px); text-align: center;
         }
         .tg-sync-info span { color: var(--text-main); font-weight: 500; }
@@ -153,12 +113,7 @@
         .chat-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
         .chat-header h3 { margin: 0; font-size: 13px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
         
-        .user-badge {
-            display: flex; align-items: center; gap: 6px; background: rgba(212, 175, 55, 0.08);
-            border: 1px solid rgba(212, 175, 55, 0.2); padding: 4px 10px; border-radius: 20px;
-            font-size: 11px; color: var(--gold); font-weight: 500;
-        }
-
+        .user-badge { display: flex; align-items: center; gap: 6px; background: rgba(212, 175, 55, 0.08); border: 1px solid rgba(212, 175, 55, 0.2); padding: 4px 10px; border-radius: 20px; font-size: 11px; color: var(--gold); font-weight: 500; }
         .status-block { display: flex; align-items: center; gap: 10px; font-size: 11px; color: var(--text-muted); }
         .online-count { display: flex; align-items: center; gap: 5px; color: var(--text-main); font-weight: 500; background: rgba(255,255,255,0.04); padding: 3px 8px; border-radius: 8px; border: 1px solid var(--border-color); }
         
@@ -168,47 +123,68 @@
 
         .chat-box-wrapper { position: relative; margin-bottom: 12px; }
         .chat-box { height: 220px; background: rgba(0, 0, 0, 0.4); border-radius: 10px; padding: 12px; overflow-y: auto; font-size: 13px; color: #e5e5ea; border: 1px solid var(--border-color); }
-        .chat-box::-webkit-scrollbar { width: 4px; }
-        .chat-box::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 3px; }
         .chat-message { margin-bottom: 10px; line-height: 1.4; word-break: break-word; }
         .chat-message span.author { color: var(--gold); font-weight: 600; margin-right: 5px; }
 
         .scroll-down-btn {
-            position: absolute; bottom: 10px; right: 15px; background: var(--gold); color: #000;
-            border: none; width: 30px; height: 30px; border-radius: 50%; display: flex;
-            align-items: center; justify-content: center; cursor: pointer; opacity: 0;
-            transition: opacity 0.3s, transform 0.2s; pointer-events: none; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            position: absolute; bottom: 10px; right: 15px; background: var(--gold); color: #000; border: none; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; transition: opacity 0.3s, transform 0.2s; pointer-events: none; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
         .scroll-down-btn.visible { opacity: 1; pointer-events: auto; }
-        .scroll-down-btn:active { transform: scale(0.9); }
-
-        .chat-form { display: flex; gap: 8px; align-items: center; width: 100%; }
-        .chat-input {
-            background: rgba(0, 0, 0, 0.5); border: 1px solid var(--border-color); padding: 12px 14px;
-            border-radius: 10px; color: #fff; font-size: 13px; outline: none; font-family: 'Montserrat', sans-serif; box-sizing: border-box;
-            flex-grow: 1; transition: border-color 0.2s;
-        }
-        .chat-input:focus { border-color: var(--gold); }
         
-        .btn-send {
-            background: var(--gold-gradient); color: #000; border: none; width: 44px; height: 44px;
-            border-radius: 10px; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; flex-shrink: 0; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
-            transition: transform 0.2s;
-        }
-        .btn-send:active { transform: scale(0.95); }
-
+        .chat-form { display: flex; gap: 8px; align-items: center; width: 100%; }
+        .chat-input { background: rgba(0, 0, 0, 0.5); border: 1px solid var(--border-color); padding: 12px 14px; border-radius: 10px; color: #fff; font-size: 13px; outline: none; font-family: 'Montserrat', sans-serif; box-sizing: border-box; flex-grow: 1; transition: border-color 0.2s; }
+        .chat-input:focus { border-color: var(--gold); }
+        .btn-send { background: var(--gold-gradient); color: #000; border: none; width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2); }
+        
         .footer-credits { text-align: center; font-size: 11px; color: var(--text-muted); letter-spacing: 0.5px; padding-bottom: 10px; }
         .footer-credits span { color: var(--gold); font-weight: 500; }
 
-        .error-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; text-align: center; padding: 20px; }
+        /* Экраны состояний (Загрузка / Ошибка) */
+        .state-screen {
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            height: 100vh; text-align: center; padding: 20px; box-sizing: border-box; width: 100%;
+            position: fixed; top: 0; left: 0; background: var(--bg-color); z-index: 100;
+        }
+        .spinner {
+            width: 40px; height: 40px; border: 4px solid rgba(212, 175, 55, 0.1);
+            border-top: 4px solid var(--gold); border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 20px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
         .error-icon { font-size: 42px; margin-bottom: 15px; }
-        .error-screen h2 { font-size: 20px; margin-bottom: 10px; color: #ff453a; }
-        .error-screen p { color: var(--text-muted); font-size: 13px; line-height: 1.5; }
+        .state-screen h2 { font-size: 20px; margin-bottom: 10px; color: #ff453a; }
+        .state-screen p { color: var(--text-main); font-size: 14px; line-height: 1.5; margin-bottom: 20px;}
+        
+        .help-box {
+            background: rgba(255, 69, 58, 0.1); border: 1px solid rgba(255, 69, 58, 0.3);
+            padding: 15px; border-radius: 12px; font-size: 13px; color: #ff8a84; text-align: left; line-height: 1.6; max-width: 400px;
+        }
     </style>
 </head>
 <body>
 
+    <!-- ЭКРАН ЗАГРУЗКИ (Виден сразу при переходе) -->
+    <div id="loadingScreen" class="state-screen">
+        <div class="spinner"></div>
+        <h2 style="color: var(--text-main);">Подключение к эфиру...</h2>
+        <p style="color: var(--text-muted);">Пожалуйста, подождите. Идет проверка безопасности соединения.</p>
+    </div>
+
+    <!-- ЭКРАН ОШИБКИ -->
+    <div id="errorScreen" class="state-screen" style="display: none;">
+        <div class="error-icon">❌</div>
+        <h2>Ошибка соединения</h2>
+        <p id="errorText">Недействительный токен доступа.</p>
+        <div class="help-box" id="helpBox" style="display: none;">
+            <b>Как исправить:</b><br>
+            1. Скорее всего, ваш VPN или антивирус жестко блокирует сигнал сайта.<br>
+            2. Смените страну в VPN (рекомендуется Европа) или отключите блокировщик рекламы.<br>
+            3. Обновите эту страницу.
+        </div>
+    </div>
+
+    <!-- ОСНОВНОЙ КОНТЕНТ (Скрыт до проверки) -->
     <div id="content" class="container" style="display: none;">
         <div class="header">
             <h1>💎 VIP GRAFBALAS</h1>
@@ -217,31 +193,26 @@
         
         <div class="video-wrapper">
             <div class="video-container" id="videoBox">
+                <!-- Плеер. enablejsapi=1 позволяет управлять им программно -->
                 <iframe id="ytIframe" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                
+                <!-- Защитный экран. Всегда перехватывает клики -->
                 <div class="click-shield" id="clickShield"></div>
                 
-                <!-- Динамический плавающий водяной знак -->
                 <div class="watermark" id="dynamicWatermark"></div>
-
                 <div class="floating-reactions" id="floatingReactions"></div>
-
-                <div class="ended-overlay" id="endedOverlay" style="display: none;">
-                    <div style="font-size: 36px; margin-bottom: 10px;">✨</div>
-                    <h3 style="color: var(--gold); margin: 0 0 10px 0; font-size: 16px;">Трансляция завершена</h3>
-                    <p style="color: var(--text-muted); font-size: 12px; max-width: 320px; margin: 0 auto;">Спасибо, что были с нами!</p>
-                </div>
 
                 <div class="play-overlay" id="playOverlay" style="display: flex;">
                     <button class="play-btn" onclick="startStream()">Подключиться к эфиру</button>
-                    <p style="margin-top: 14px; color: rgba(255,255,255,0.5); font-size: 9px;">Нажмите для запуска трансляции</p>
+                    <p style="margin-top: 14px; color: rgba(255,255,255,0.5); font-size: 9px;">Нажмите для синхронизации плеера</p>
                 </div>
             </div>
 
             <div class="controls-row">
                 <div class="action-btns-group">
-                    <button class="action-btn" id="reloadStreamBtn" onclick="reloadStream()">
+                    <button class="action-btn btn-warning" id="reloadStreamBtn" onclick="reloadStream()">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
-                        Обновить
+                        Исправить ошибку
                     </button>
                     <button class="action-btn" id="fsBtn" onclick="toggleFullScreen()">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
@@ -263,12 +234,9 @@
 
         <div class="tg-sync-info">
             <div class="tg-icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <circle cx="12" cy="12" r="10" fill="#229ed9"/>
-                    <path d="M8 12l8-4-3 9-2-3-3-2z" fill="#fff"/>
-                </svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10" fill="#229ed9"/><path d="M8 12l8-4-3 9-2-3-3-2z" fill="#fff"/></svg>
             </div>
-            <div>Синхронизировано с Telegram. Сообщения здесь и в секретном временном чате отображаются в реальном времени.</div>
+            <div>Синхронизировано с Telegram. Сообщения отображаются в реальном времени.</div>
         </div>
 
         <div class="chat-section">
@@ -281,13 +249,8 @@
                     </div>
                 </div>
                 <div class="status-block">
-                    <div class="online-count" title="Смотрят прямо сейчас">
-                        👁 <span id="viewersCount">1</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 6px;">
-                        <div class="dot" id="connectionDot"></div>
-                        <span id="connectionText">Онлайн</span>
-                    </div>
+                    <div class="online-count" title="Смотрят прямо сейчас">👁 <span id="viewersCount">1</span></div>
+                    <div style="display: flex; align-items: center; gap: 6px;"><div class="dot" id="connectionDot"></div><span id="connectionText">Онлайн</span></div>
                 </div>
             </div>
             
@@ -305,20 +268,11 @@
                 </button>
             </div>
         </div>
-
-        <div class="footer-credits">
-            Все права защищены. Разработчик © <span>Команда ГрафБалас</span>
-        </div>
-    </div>
-
-    <div id="error" class="error-screen" style="display: none;">
-        <div class="error-icon">🔐</div>
-        <h2>Доступ закрыт</h2>
-        <p>Недействительный или отсутствующий ключ безопасности.<br><br>Пожалуйста, получите персональную ссылку через официального бота.</p>
+        <div class="footer-credits">Все права защищены. Разработчик © <span>Команда ГрафБалас</span></div>
     </div>
 
     <script>
-        let VIDEO_ID = "nesG1PTQrK0"; 
+        let VIDEO_ID = ""; 
         const SERVER_URL = "https://stream-sxnh.onrender.com";
         let isAuth = false;
         let verifiedFullName = "Резидент"; 
@@ -326,130 +280,138 @@
         let userHasScrolledUp = false;
         let lastProcessedMsgCount = 0;
 
+        // Умная функция запроса с автоматическими повторениями (Retry) и таймаутом
+        async function fetchWithRetry(url, options, retries = 3, timeoutMs = 8000) {
+            for (let i = 0; i < retries; i++) {
+                try {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+                    const response = await fetch(url, { ...options, signal: controller.signal });
+                    clearTimeout(timeoutId);
+                    if (!response.ok) throw new Error("HTTP error " + response.status);
+                    return await response.json();
+                } catch (err) {
+                    if (i === retries - 1) throw err;
+                    await new Promise(r => setTimeout(r, 2000)); // Ждем 2 сек перед новой попыткой
+                }
+            }
+        }
+
+        function showError(text, showHelp = false) {
+            document.getElementById('loadingScreen').style.display = 'none';
+            document.getElementById('content').style.display = 'none';
+            const errScreen = document.getElementById('errorScreen');
+            errScreen.style.display = 'flex';
+            document.getElementById('errorText').innerText = text;
+            if (showHelp) document.getElementById('helpBox').style.display = 'block';
+        }
+
         window.onload = async function() {
             const urlParams = new URLSearchParams(window.location.search);
             const token = urlParams.get('token'); 
 
             if (!token || token.trim() === "") {
-                document.getElementById('error').style.display = 'flex';
+                showError("Доступ закрыт. Отсутствует персональный токен.", false);
                 return;
             }
 
             try {
-                let response = await fetch(`${SERVER_URL}/api/check-token`, {
+                // Шаг 1: Проверка токена (с защитой от зависания VPN)
+                let data = await fetchWithRetry(`${SERVER_URL}/api/check-token`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ token: token })
-                });
-                let data = await response.json();
+                }, 3, 8000);
 
-                if (data.valid) {
+                if (data && data.valid) {
                     isAuth = true;
-                    
                     if (data.name) {
                         verifiedFullName = data.name;
                         document.getElementById('userNameDisplay').innerText = verifiedFullName;
                     }
 
-                    // Установка данных в плавающий водяной знак защиты
                     const watermarkEl = document.getElementById('dynamicWatermark');
                     if (watermarkEl) {
                         watermarkEl.innerText = `${verifiedFullName} | Token: ${token}`;
-                        moveWatermark(); // Первичное случайное расположение
+                        moveWatermark();
                     }
 
-                    document.getElementById('content').style.display = 'block';
-                    
+                    // Шаг 2: Получение актуального ID стрима
                     try {
-                        let vidResp = await fetch(`${SERVER_URL}/api/video-id`);
-                        let vidData = await vidResp.json();
-                        if (vidData.video_id) VIDEO_ID = vidData.video_id;
+                        let vidData = await fetchWithRetry(`${SERVER_URL}/api/video-id`, {}, 3, 6000);
+                        if (vidData && vidData.video_id) {
+                            VIDEO_ID = vidData.video_id;
+                        } else {
+                            throw new Error("No ID");
+                        }
                     } catch(e) {
-  console.error("Не удалось получить ID видео, используем стандартный.");
+                        showError("Не удалось получить ссылку на трансляцию. Возможно, стрим еще не настроен администратором.", false);
+                        return; // Останавливаем выполнение, чтобы не грузить пустой плеер
                     }
 
-                    document.getElementById('ytIframe').src = `https://www.youtube.com/embed/${VIDEO_ID}?autoplay=0&controls=0&disablekb=1&modestbranding=1&rel=0&playsinline=1`;
+                    // Шаг 3: Все проверки пройдены, показываем контент
+                    document.getElementById('loadingScreen').style.display = 'none';
+                    document.getElementById('content').style.display = 'block';
+
+                    // ХИТРОСТЬ: Загружаем плеер сразу БЕЗ ЗВУКА (mute=1). Это 100% обходит блокировку автоплея браузерами.
+                    document.getElementById('ytIframe').src = `https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1&mute=1&controls=0&disablekb=1&modestbranding=1&rel=0&playsinline=1&enablejsapi=1`;
 
                     fetchMessages();
                     setInterval(fetchMessages, 3000);
                 } else {
-                    document.getElementById('error').style.display = 'flex';
+                    showError(data.error || "Доступ закрыт. Возможно, вы пытаетесь зайти со второго устройства.", false);
                 }
             } catch (e) {
-                document.getElementById('error').style.display = 'flex';
+                // Если fetchWithRetry сдался после всех попыток — значит сеть жестко блокирует сайт
+                showError("Связь с сервером прервана.", true);
             }
         };
 
-        // --- ФУНКЦИИ ЗАЩИТЫ И МУВИКОМ ВОДЯНОГО ЗНАКА ---
         function moveWatermark() {
             const wm = document.getElementById('dynamicWatermark');
             const box = document.getElementById('videoBox');
             if (!wm || !box) return;
-
             const maxX = box.clientWidth - wm.clientWidth - 30;
             const maxY = box.clientHeight - wm.clientHeight - 30;
-            
-            const randomX = Math.max(15, Math.floor(Math.random() * maxX));
-            const randomY = Math.max(15, Math.floor(Math.random() * maxY));
-
-            wm.style.left = randomX + 'px';
-            wm.style.top = randomY + 'px';
+            wm.style.left = Math.max(15, Math.floor(Math.random() * maxX)) + 'px';
+            wm.style.top = Math.max(15, Math.floor(Math.random() * maxY)) + 'px';
         }
-
-        // Перемещаем водяной знак каждые 5 секунд, чтобы его нельзя было вырезать
         setInterval(moveWatermark, 5000);
 
-        // Размытие экрана при попытке уйти из фокуса / сделать скриншот
-        window.addEventListener('blur', () => {
-            const wrapper = document.querySelector('.video-wrapper');
-            if (wrapper) wrapper.classList.add('blurred');
-        });
-
-        window.addEventListener('focus', () => {
-            const wrapper = document.querySelector('.video-wrapper');
-            if (wrapper) wrapper.classList.remove('blurred');
-        });
-
+        // Включение звука программно при нажатии кнопки (пользовательский клик разрешает звуки браузеру)
         function startStream() {
             const iframe = document.getElementById('ytIframe');
-            iframe.src = `https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1&controls=0&disablekb=1&modestbranding=1&rel=0&playsinline=1`;
+            // Посылаем команды через postMessage в iframe YouTube (включаем звук и ставим громкость 100)
+            iframe.contentWindow.postMessage(JSON.stringify({event: 'command', func: 'unMute', args: []}), '*');
+            iframe.contentWindow.postMessage(JSON.stringify({event: 'command', func: 'setVolume', args: [100]}), '*');
 
             const overlay = document.getElementById('playOverlay');
             overlay.style.opacity = '0';
             setTimeout(() => { overlay.style.display = 'none'; }, 400);
-
-            document.getElementById('fsBtn').style.display = 'flex';
-            document.getElementById('reloadStreamBtn').style.display = 'flex';
         }
 
+        // Эта кнопка спасает от ошибки "Подтвердите что вы не бот" (капчи) без снятия защитного щита
         function reloadStream() {
             const iframe = document.getElementById('ytIframe');
-            iframe.src = `https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1&controls=0&disablekb=1&modestbranding=1&rel=0&playsinline=1`;
+            // Полностью перезагружаем iframe. Поскольку пользователь уже нажимал кнопки, autoplay=1 сработает и со звуком.
+            iframe.src = `https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1&controls=0&disablekb=1&modestbranding=1&rel=0&playsinline=1&enablejsapi=1`;
         }
 
         function toggleFullScreen() {
             const elem = document.getElementById('videoBox');
             if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-                if (elem.requestFullscreen) {
-                    elem.requestFullscreen();
-                } else if (elem.webkitRequestFullscreen) {
-                    elem.webkitRequestFullscreen();
-                }
+                if (elem.requestFullscreen) elem.requestFullscreen();
+                else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen();
             } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                } else if (document.webkitExitFullscreen) {
-                    document.webkitExitFullscreen();
-                }
+                if (document.exitFullscreen) document.exitFullscreen();
+                else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
             }
         }
 
         async function sendMessage() {
             const messageInput = document.getElementById('messageInput');
             let text = messageInput.value.trim();
-
             if (!text) return;
-
             try {
                 await fetch(`${SERVER_URL}/api/send`, {
                     method: 'POST',
@@ -459,30 +421,24 @@
                 messageInput.value = '';
                 scrollToBottom(true);
                 fetchMessages(); 
-            } catch (error) {
-                console.error("Ошибка сети:", error);
-            }
+            } catch (error) { console.error("Ошибка сети:", error); }
         }
 
         async function fetchMessages() {
             try {
                 let response = await fetch(`${SERVER_URL}/api/messages`);
                 let data = await response.json();
-                
                 failedFetchesCount = 0;
                 setConnectionStatus('online');
-
                 const chatMessages = document.getElementById('chatMessages');
                 let htmlContent = '';
-                
                 let uniqueAuthors = new Set();
 
                 if (data.messages.length > lastProcessedMsgCount && lastProcessedMsgCount > 0) {
                     for (let i = lastProcessedMsgCount; i < data.messages.length; i++) {
                         let m = data.messages[i];
                         if (m.text && m.text.startsWith('[РЕАКЦИЯ:') && m.name !== verifiedFullName) {
-                            let emoji = m.text.replace('[РЕАКЦИЯ:', '').replace(']', '').trim();
-                            spawnFlyingEmoji(emoji);
+                            spawnFlyingEmoji(m.text.replace('[РЕАКЦИЯ:', '').replace(']', '').trim());
                         }
                     }
                 }
@@ -490,7 +446,6 @@
                 
                 data.messages.forEach(msg => {
                     if (msg.text && msg.text.startsWith('[РЕАКЦИЯ:')) return;
-
                     uniqueAuthors.add(msg.name);
                     let authorStyle = msg.name === "Система" ? "color: #32d74b;" : "color: var(--gold);";
                     htmlContent += `<div class="chat-message"><span class="author" style="${authorStyle}">${escapeHtml(msg.name)}:</span> ${escapeHtml(msg.text)}</div>`;
@@ -500,31 +455,21 @@
                 
                 if (chatMessages.innerHTML !== htmlContent) {
                     chatMessages.innerHTML = htmlContent;
-                    if (!userHasScrolledUp) {
-                        scrollToBottom(false);
-                    } else {
-                        checkScrollPosition();
-                    }
+                    if (!userHasScrolledUp) scrollToBottom(false);
+                    else checkScrollPosition();
                 }
             } catch (e) {
                 failedFetchesCount++;
-                if (failedFetchesCount >= 2) {
-                    setConnectionStatus('reconnecting');
-                }
+                if (failedFetchesCount >= 2) setConnectionStatus('reconnecting');
             }
         }
 
         function setConnectionStatus(status) {
             const dot = document.getElementById('connectionDot');
             const text = document.getElementById('connectionText');
-            
             dot.className = "dot";
-            if (status === 'online') {
-                text.innerText = "Онлайн";
-            } else if (status === 'reconnecting') {
-                dot.classList.add('reconnecting');
-                text.innerText = "Подключение...";
-            }
+            if (status === 'online') text.innerText = "Онлайн";
+            else if (status === 'reconnecting') { dot.classList.add('reconnecting'); text.innerText = "Подключение..."; }
         }
 
         function handleChatScroll() {
@@ -548,8 +493,7 @@
 
         function checkScrollPosition() {
             const chatBox = document.getElementById('chatMessages');
-            let positionFromBottom = chatBox.scrollHeight - chatBox.scrollTop - chatBox.clientHeight;
-            if (positionFromBottom <= 40) {
+            if (chatBox.scrollHeight - chatBox.scrollTop - chatBox.clientHeight <= 40) {
                 userHasScrolledUp = false;
                 document.getElementById('scrollDownBtn').classList.remove('visible');
             }
@@ -563,34 +507,22 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name: verifiedFullName, text: `[РЕАКЦИЯ:${emoji}]` })
                 });
-            } catch (error) {
-                console.error("Ошибка отправки реакции:", error);
-            }
+            } catch (error) {}
         }
 
         function spawnFlyingEmoji(emoji) {
             const container = document.getElementById('floatingReactions');
             if (!container) return;
-
             const el = document.createElement('div');
-            el.className = 'flying-emoji';
-            el.innerText = emoji;
-            
-            const randomX = Math.floor(Math.random() * 60) - 20;
-            el.style.right = (20 + randomX) + 'px';
-
+            el.className = 'flying-emoji'; el.innerText = emoji;
+            el.style.right = (20 + (Math.floor(Math.random() * 60) - 20)) + 'px';
             container.appendChild(el);
-
             setTimeout(() => { el.remove(); }, 2500);
         }
         
         function checkEnter(e) { if (e.key === 'Enter') sendMessage(); }
-        function escapeHtml(text) {
-            if (!text) return '';
-            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-        }
+        function escapeHtml(text) { return text ? text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") : ''; }
 
-        // Блокировка контекстного меню и горячих клавиш (F12, сохранения, печати)
         document.addEventListener('contextmenu', event => event.preventDefault()); 
         document.onkeydown = function(e) {
             if (e.keyCode == 123) return false; 
@@ -600,8 +532,7 @@
 
         function toggleReactionMenu(event) {
             event.stopPropagation();
-            const popup = document.getElementById('reactionPopup');
-            popup.classList.toggle('show');
+            document.getElementById('reactionPopup').classList.toggle('show');
         }
 
         function sendReactionFromMenu(emoji) {
@@ -615,15 +546,15 @@
         });
 
         window.addEventListener('blur', () => {
-    const container = document.getElementById('videoBox');
-    if (container) container.classList.add('blurred');
-});
+            const container = document.getElementById('videoBox');
+            if (container) container.classList.add('blurred');
+        });
 
-window.addEventListener('focus', () => {
-    const container = document.getElementById('videoBox');
-    if (container) container.classList.remove('blurred');
-});
-        
+        window.addEventListener('focus', () => {
+            const container = document.getElementById('videoBox');
+            if (container) container.classList.remove('blurred');
+        });
     </script>
 </body>
 </html>
+       
